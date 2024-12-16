@@ -71,7 +71,14 @@
   } else {
    // Our cache is out-of-date, so load the data from our remote server,
    // and also save it over our cache for next time.
-   $file = file_get_contents($full_url);
+   $opts = [
+    'http' => [
+     'method' => 'GET',
+     'header' => 'User-Agent: '.$GLOBALS['USER_AGENT']
+    ]
+   ];
+   $context = stream_context_create($opts);
+   $file = file_get_contents($full_url, false, $context);
    if ($file_is_cachable) {
     file_put_contents($cache_file, $file, LOCK_EX);
    }
