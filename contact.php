@@ -21,7 +21,7 @@
   </dl>
  </p>
  <p>
-  <span class="copy">Copyright &copy; Harris Hudson 2024</span>
+  <span class="copy">Copyright &copy; Harris Hudson 2025</span>
  </p>
 </div>
 

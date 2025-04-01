@@ -9,7 +9,6 @@ An Open Source website with small collection of NetCDF browser based visualizati
 ## Related Repo
 [CFRender](https://github.com/harrishudson/CFRender)
 
-
 ## Server Requirements
 If you would like to deploy this site on your own servers, then your servers will need to support **php** files.
 
@@ -24,5 +23,4 @@ Please see the "Get Involved" page for requirements for considerations of adding
 Harris Hudson
 
 ## Donate
-
 [https://harrishudson.com/#sponsor](https://harrishudson.com/#sponsor)

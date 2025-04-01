@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('GA Airborne Geophysics (iv65) Elevation Survey', 'no');
+ $nonce = page_top('NOAA Coastwatch Global 10 km Blended Daily Seawinds - Latest', 'no');
 ?>
 
 <script nonce="<?php echo $nonce;?>" type="module">
@@ -8,41 +8,40 @@ import { CFUtils, CFRender }
  from '../../common/CFRender.js'
 import { TDSCatalogParser, TDSMetadataParser } 
  from '../../common/THREDDS_utils.js'
-import { createColorLegendImg, tile_providers, formatDateToYYYYMMDD } 
+import { createColorLegendImg, tile_providers, 
+         getOneMonthPrior, formatDateToYYYYMMDD } 
  from '../../common/map_helpers.js'
-import { getCache, setCache, cleanCache, openDatabase, 
-         storeData, getData, clearAllData, fetchData } 
+import { setCache, getCache } 
  from '../../common/offline_storage_helpers.js'
-import { SphericalProjection }
+import { SphericalProjection } 
  from '../../common/projection_helpers.js'
-import { elevation_meters_stops } 
+import { windOmitArrow, windArrowOpacity, windScaleArrow,
+         windAnimateArrow, windArrowFill, windCellFill, windOmitCell,
+         wind_magnitude_cell_stops, wind_magnitude_arrow_stops }
  from '../../common/map_styles.js'
 
 // Primary Map metadata
-
 const gMAP_METADATA = {
+ "map_title": "NOAA Coastwatch Global 10 km Blended Daily Seawinds - Latest",
+ "proxy": "COASTWATCH_thredds_proxy.php?url=",
  "catalog_endpoint": 
-  "https://thredds.nci.org.au/thredds/catalog//catalogs/iv65/airborne_geophysics/airborne_geophysics.xml",
- "data_endpoint_prefix": 
-  "https://thredds.nci.org.au/thredds/catalog/iv65/Geoscience_Australia_Geophysics_Reference_Data_Collection/airborne_geophysics/",
+  "/catalog/uvcompNCEIBlendedGlobalNRTDailyWW00/catalog.xml",
  "subsetting_endpoint_prefix": 
-  "https://thredds.nci.org.au/thredds/ncss/grid/iv65/Geoscience_Australia_Geophysics_Reference_Data_Collection/airborne_geophysics/",
+  "/ncss/grid/uvcompNCEIBlendedGlobalNRTDailyWW00/",
  "subsetting_query_string_suffix": 
+  //"&disableProjSubset=on&addLatLon=true&accept=netcdf&format=netcdf3",
   "&addLatLon=true&accept=netcdf&format=netcdf3",
- "variable": 'Band1',
- "map_title": 
-  "GA Airborne Geophysics (iv65) Elevation Survey",
  "author_comment": 
-  "Select a State then select a Survey.",
+  "Click for Wind Magnitude information.  Click Arrows for Average Vector information.",
  "related_links": 
   [{"label":"THREDDS Endpoint",
-    "href":"https://thredds.nci.org.au/thredds/catalog/catalogs/iv65/airborne_geophysics/airborne_geophysics.html"}],
- "map_attribution": 'Data &copy; GA',
- "map_type": 'grid',
- "layer_starting_opacity": 0.7,
- "cell_color_stops": elevation_meters_stops,
+    "href":"https://coastwatch.noaa.gov/thredds/catalog/uvcompNCEIBlendedGlobalNRTDailyWW00/catalog.html"}],
+ "variable": "windspeed",
+ "cell_color_stops": wind_magnitude_cell_stops,
+ "arrow_color_stops": wind_magnitude_arrow_stops,
+ "layer_starting_opacity": 0.4,
  "cell_omit_value": function(val) {
-  if ((val < -10) || (!isFinite(val)))
+  if (((!val) && (val != 0)) || (!isFinite(val)))
    return true
   return false
  },
@@ -51,173 +50,93 @@ const gMAP_METADATA = {
 
 let cfu = new CFUtils()
 
-function fillCell(cellData) {
- return cfu.steppedHexColor(cellData.value, gMAP_METADATA['cell_color_stops'])
-}
-
-function omitCell(cellData) {
- return (gMAP_METADATA['cell_omit_value'](cellData.value))
-}
-
-function opacityCell(cellData) {
- return (gMAP_METADATA['cell_opacity'])
-}
-
 // Main script
 
-var CFR  // CFR is the main CFRender object
-var gOVERLAY
-var gOVERLAY_OPACITY = gMAP_METADATA["layer_starting_opacity"]
+var CFR;  // CFR is the main CFRender object
 var map
 var gBASE_LAYER
+var gARROW_OVERLAY
+var gCELL_OVERLAY
+var gLATEST = null
 var gNETCDF_TDS = null
+var gOVERLAY_OPACITY = gMAP_METADATA["layer_starting_opacity"]
 var gNETCDF_SUBSET_ENDPOINT = null
 var gNETCDF_PROJECTION_CACHE = null
-var gPOPUP = null
+var gDATASET_TIME_MESSAGE = null
+var gMAP_FITTED = false
 var gMAP_LATEST_REQUEST = 0
 var gMAP_CURRENT_REQUEST = null
 
 function fetch_catalog_index() {
- let sv = document.getElementById('select_survey')
- sv.innerHTML = '<option value="none" selected="selected">Survey</option>'
- sv.disabled = true
+ let proxy = gMAP_METADATA["proxy"]
+ let endpoint = gMAP_METADATA["catalog_endpoint"]
+ let endpoint_url = proxy + encodeURIComponent(endpoint)
 
- let endpoint_url = gMAP_METADATA["catalog_endpoint"]
- 
  queue_throbber()
 
- fetch(endpoint_url, {
-  method: 'GET', 
-  headers: {'Content-Type': 'application/xml'},
-  mode: 'cors' 
- })
+ let cached_endpoint = getCache(endpoint_url)
+ if (cached_endpoint) {
+  process_catalog_index(cached_endpoint)
+  return
+ }
+ 
+ fetch(endpoint_url)
   .then(response => response.text())
-  .then(str => process_catalog_index(str))
-  .catch(error => { dequeue_throbber(); status_msg(error) })
+  .then(function(str) {
+    setCache(endpoint_url, str)
+    process_catalog_index(str)
+   })
+  .catch(error => { 
+    dequeue_throbber(); 
+    remove_overlay()
+    status_msg(error) 
+   })
 }
 
 function process_catalog_index(data) {
  dequeue_throbber()
 
  if (!data) {
+  remove_overlay()
   status_msg('No Data Found.')
   return
  }
+
  let parser = new DOMParser()
  var xmlDoc = parser.parseFromString(data,"text/xml")
  var TDS = new TDSCatalogParser(xmlDoc)
- populate_states(TDS)
+ populate_dates(TDS)
 }
 
-function populate_states(TDS) {
- let dataset_refs = TDS.catalog_dataset_refs
- let s = document.getElementById('select_state')
- s.innerHTML = '<option value="none" selected="selected">State</option>'
+function populate_dates(TDS) {
+ let datasets = TDS.catalog_dataset_datasets
+ gLATEST = datasets[datasets.length - 1].name
 
- dataset_refs.forEach(optionData => {
-  const option = document.createElement('option')
-  option.value = optionData.title
-  option.textContent = optionData.title
-  s.appendChild(option)
-  }) 
+ fetch_file_metadata()
 }
 
-function select_state_change(e) {
- remove_overlay()
- clear_render()
-
- let sv = document.getElementById('select_survey')
- sv.innerHTML = '<option value="none" selected="selected">Survey</option>'
- sv.disabled = true
-
- if (this.value == 'none')
-  return
-
- let endpoint_url = 'https://thredds.nci.org.au/thredds/catalog/iv65/Geoscience_Australia_Geophysics_Reference_Data_Collection/airborne_geophysics/'+encodeURIComponent(this.value)+'/grid/catalog.xml'
-
- queue_throbber()
-
- fetch(endpoint_url, {
-  method: 'GET', 
-  headers: {'Content-Type': 'application/xml'},
-  mode: 'cors' 
- })
-  .then(response => response.text())
-  .then(str => process_survey_index(str))
-  .catch(error => { dequeue_throbber(); status_msg(error) })
-}
-
-function process_survey_index(data) {
- dequeue_throbber()
-
- if (!data) {
-  status_msg('No Data Found.')
-  return
- }
- let parser = new DOMParser()
- var xmlDoc = parser.parseFromString(data,"text/xml")
- var TDS = new TDSCatalogParser(xmlDoc)
- populate_surveys(TDS)
-}
-
-function populate_surveys(TDS) {
-
- let dataset_refs = TDS.catalog_dataset_refs
- let sv = document.getElementById('select_survey')
- sv.innerHTML = '<option value="none" selected="selected">Survey</option>'
-
- dataset_refs.forEach(optionData => {
-  const option = document.createElement('option')
-  option.value = optionData.title
-  option.textContent = optionData.title
-  sv.appendChild(option)
-  }) 
-
- if ((dataset_refs) && (dataset_refs.length)) 
-  sv.disabled = false
-}
-
-function select_survey_change(e) {
- let survey = this.value
- remove_overlay()
- clear_render()
-
- if (survey == 'none') 
-  return
-
- fetch_survey_metadata()
-}
-
-function fetch_survey_metadata() {
- let s = document.getElementById('select_state').value
- let sv = document.getElementById('select_survey').value
-
- let prefix = gMAP_METADATA["subsetting_endpoint_prefix"]
- let endpoint = prefix + 
-                encodeURIComponent(s) +
-                '/grid/' +
-                encodeURIComponent(sv) +
-                '/' +
-                encodeURIComponent(sv) +
-                '-grid-dem_geoid.nc'
+function fetch_file_metadata() {
+ let endpoint = gMAP_METADATA["subsetting_endpoint_prefix"] + gLATEST 
 
  let dataset_endpoint = endpoint + '/dataset.xml'
 
+ let proxy = gMAP_METADATA["proxy"]
+ let dataset_proxy_url = proxy + encodeURIComponent(dataset_endpoint)
+
  queue_throbber()
 
- fetch(dataset_endpoint,{
-  method: 'GET', 
-  headers: { 'Content-Type': 'application/xml'},
-  mode: 'cors' 
- })
+ fetch(dataset_proxy_url)
   .then(response => response.text())
   .then(str => process_netcdf_metadata(str, endpoint))
-  .catch(error => { dequeue_throbber(); status_msg(error) })
+  .catch(error => { 
+   dequeue_throbber()
+   remove_overlay()
+   status_msg(error) 
+  })
 }
 
 function process_netcdf_metadata(data, endpoint) {
  dequeue_throbber()
-
  if (!data) {
   status_msg('No Data Found.')
   return
@@ -229,20 +148,22 @@ function process_netcdf_metadata(data, endpoint) {
   gNETCDF_SUBSET_ENDPOINT = endpoint
  } catch(e) {
   status_msg('No Data Found.')
+  console.log(e)
   return
  }
- 
- fit_map_bounds()
 
+ fit_map_bounds()
  window.setTimeout(redraw_map_layer, 100)
 }
 
 function fit_map_bounds() {
+ if (gMAP_FITTED)
+  return
  let LatLonBox = gNETCDF_TDS.getLatLonBox()
  let NetCDFBounds = [ [LatLonBox['south'], LatLonBox['west']],
                       [LatLonBox['north'], LatLonBox['east']] ]
-                      
  map.fitBounds(NetCDFBounds)
+ gMAP_FITTED = true
 }
 
 function redraw_map_layer() {
@@ -265,20 +186,21 @@ function redraw_map_layer() {
   return
  }
 
- var query_string = "?var="+encodeURIComponent(gMAP_METADATA.variable)
+ // Add Variables (hard coded)
+ var query_string = `?var=u_wind&var=v_wind&var=${gMAP_METADATA['variable']}`
 
  query_string += "&spatial=bb"+
                  "&east="+encodeURIComponent(east)+
                  "&west="+encodeURIComponent(west)+
                  "&north="+encodeURIComponent(north)+
                  "&south="+encodeURIComponent(south)
- 
+
  //HozizStride
  let sw_pixel = map.latLngToContainerPoint([south, west])
  let ne_pixel = map.latLngToContainerPoint([north, east])
  let img_x_range = Math.abs(sw_pixel.x - ne_pixel.x)
  let img_y_range = Math.abs(sw_pixel.y - ne_pixel.y)
- let image_size = {x: img_x_range, y: img_y_range}
+ var image_size = {x: img_x_range, y: img_y_range}
  let HorizStride = gNETCDF_TDS.getHorizStride(image_size, queryBounds)
  
  query_string += "&horizStride="+encodeURIComponent(HorizStride)
@@ -287,16 +209,16 @@ function redraw_map_layer() {
  
  // Commit to fetch
 
- CFR = null  // Remove existing CFR so map_tap won't draw popups during loading
+ CFR = null  
 
- try { map.removeLayer(gPOPUP) } catch(e) {}
- 
- fetch_netcdf_for_render(query_string, bounds)
+ fetch_netcdf_for_render(query_string)
 }
 
 function fetch_netcdf_for_render(query_string) {
  let netcdf_subset_url = gNETCDF_SUBSET_ENDPOINT + query_string
-                         
+ let proxy = gMAP_METADATA["proxy"]
+ let endpoint_proxy_subset_url = proxy + encodeURIComponent(netcdf_subset_url)
+
  queue_throbber()
 
  gMAP_LATEST_REQUEST++
@@ -308,11 +230,7 @@ function fetch_netcdf_for_render(query_string) {
  const controller = new AbortController()
  gMAP_CURRENT_REQUEST = controller;
 
- fetch(netcdf_subset_url, { 
-  signal: controller.signal,
-  method: 'GET', 
-  mode: 'cors' 
- })
+ fetch(endpoint_proxy_subset_url,  { signal: controller.signal })
  .then(response => {
         if (!response.ok) 
          throw new Error("Network response was not ok")
@@ -339,55 +257,98 @@ function process_netcdf(barray) {
  }
 
  CFR = new CFRender(barray, null, gNETCDF_PROJECTION_CACHE, true)
- 
+
  render_image()
 }
 
 async function render_image() {
- let img = await CFR.draw2DbasicGrid(gMAP_METADATA['variable'], 
-                                     null,
-                                     SphericalProjection, 
-                                     'url',
-                                     {"fill": fillCell,
-                                      "opacity": opacityCell,
-                                      "omit": omitCell,
-                                      "stroke": "none",
-                                      "strokeWidth": 0
-                                     })
+ let LatLonBox = CFR.getXYbbox().bbox
+ let bounds = LatLonBox
+ let east = LatLonBox[1][0]
+ let west = LatLonBox[0][0]
+ let north = LatLonBox[1][1]
+ let south = LatLonBox[0][1]
+ let sw_pixel = map.latLngToContainerPoint([south, west])
+ let ne_pixel = map.latLngToContainerPoint([north, east])
+ let imgWidth = Math.abs(sw_pixel.x - ne_pixel.x)
+ let imgHeight = Math.abs(sw_pixel.y - ne_pixel.y)
+ let imageBounds = [[ south, west ], [ north, east ]]
+
+ let img1 = await CFR.draw2DbasicGrid(gMAP_METADATA['variable'],
+                                      {},
+                                      SphericalProjection, 
+                                      'url',
+                                      {"fill": windCellFill,
+                                       "opacity": 1,
+                                       "stroke": "none",
+                                       "strokeWidth": 0 ,
+                                       "omit": windOmitCell
+                                      })
+
+
  if (!CFR) {
   dequeue_throbber()
   return
  }
 
+ if (gCELL_OVERLAY) 
+  map.removeLayer(gCELL_OVERLAY)
+
+ gCELL_OVERLAY = L.imageOverlay(img1, imageBounds) 
+ gCELL_OVERLAY.addTo(map)
+ update_layer_opacity() 
+
+ let img = CFR.draw2DbasicVector('u_wind',
+                                 'v_wind',
+                                 0,
+                                 {},
+                                 imgWidth,
+                                 imgHeight,
+                                 SphericalProjection, 
+                                 'svg',
+                                 {"omit": windOmitArrow,
+                                  "fill": windArrowFill,
+                                  "opacity": windArrowOpacity,
+                                  "symbol": 'vane',
+                                  "symbolSize": windScaleArrow,
+                                  "idealArrowSize": 20,
+                                  "animateDuration": windAnimateArrow,
+                                  "eventListeners": [
+                                   ['click', show_arrow_data, null],
+                                  ]
+                                })
+
+ if (gARROW_OVERLAY) 
+  map.removeLayer(gARROW_OVERLAY)
+
+ gARROW_OVERLAY = L.svgOverlay(img, imageBounds, {interactive: true}) 
+ gARROW_OVERLAY.addTo(map)
+
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
 
- 
- // Draw overlay
- let bounds = CFR.getXYbbox().bbox
- let imageBounds = [[ bounds[0][1], bounds[0][0] ], [ bounds[1][1], bounds[1][0] ]]
- remove_overlay()
- gOVERLAY = L.imageOverlay(img, imageBounds)
- gOVERLAY.addTo(map)
- update_layer_opacity()
+ let theTime = CFR.netCDF.getDataVariable('time')[0]
+ let timeUnits = CFR.getVariableUnits('time')
+ let timeValue = cfu.getTimeISOString(theTime, timeUnits)
+ let localTime = cfu.zuluToLocalTime(timeValue)
+ document.getElementById('map_info').textContent = localTime
+ gDATASET_TIME_MESSAGE = localTime
+
  dequeue_throbber()
 }
 
 function remove_overlay(no_reset) {
- if (gOVERLAY) 
-  map.removeLayer(gOVERLAY)
- gOVERLAY = null
-}
-
-function clear_render() {
- gNETCDF_SUBSET_ENDPOINT = null
- gNETCDF_PROJECTION_CACHE = null
- CFR = null
+ if (gARROW_OVERLAY) 
+  map.removeLayer(gARROW_OVERLAY)
+ gARROW_OVERLAY = null
+ if (gCELL_OVERLAY) 
+  map.removeLayer(gCELL_OVERLAY)
+ gCELL_OVERLAY = null
 }
 
 function map_startup() {
  map = L.map('map',{"zoomControl": false}).setView([0, 0], 1)
  map.on('click', map_tap)
- map.on('moveend',redraw_map_layer)
+ map.on('moveend', redraw_map_layer)
 
  // Map buttons & Dialog controls eventListeners
  document.getElementById("button_zoom_in").addEventListener('click', 
@@ -456,19 +417,6 @@ function map_startup() {
  document.getElementById('opacity_range').value = gOVERLAY_OPACITY * 100
  document.getElementById('opacity_range_label').textContent = (gOVERLAY_OPACITY * 100).toString()+'%'
 
- document.getElementById('select_state').addEventListener('change', select_state_change)
- document.getElementById('select_state').addEventListener('click',
-  function(e) {
-   e.stopPropagation()
-   return false 
-  })
- document.getElementById('select_survey').addEventListener('change', select_survey_change)
- document.getElementById('select_survey').addEventListener('click', 
-  function(e) {
-   e.stopPropagation()
-   return false 
-  })
-
  // Map Title
  if (gMAP_METADATA.map_title)
   document.getElementById('map_title').textContent = gMAP_METADATA.map_title
@@ -495,9 +443,9 @@ function map_startup() {
  map.attributionControl.setPrefix(false)
  map.attributionControl.addAttribution(gMAP_METADATA["map_attribution"])
 
- status_msg(gMAP_METADATA["author_comment"])
+ status_msg(gMAP_METADATA['author_comment']) 
 
- fetch_catalog_index() 
+ fetch_catalog_index()
 }
 
 function set_map_base_layer() {
@@ -513,49 +461,47 @@ function set_map_base_layer() {
 }
 
 function update_layer_opacity() {
- if (gOVERLAY) 
-  gOVERLAY.setOpacity(gOVERLAY_OPACITY)
+ if (gCELL_OVERLAY) 
+  gCELL_OVERLAY.setOpacity(gOVERLAY_OPACITY)
+}
+
+function show_arrow_data(e) {
+ let arrow_data = e.srcElement.dataset
+ status_msg(`Avg Arrow Magnitude:\n ${arrow_data['value_magnitude']}\nAvg Arrow Direction:\n ${arrow_data['value_direction']}`)
 }
 
 function map_tap(evt) {
  close_all_dialogs()
- if (!CFR) return
- if (!map) return
+
+ if (!map) 
+  return
+
+ if (!CFR)
+  return
+
+ let theTime = CFR.netCDF.getDataVariable('time')[0]
+ let timeUnits = CFR.getVariableUnits('time')
+ let timeValue = cfu.getTimeISOString(theTime, timeUnits)
+ //let DimensionFilter = {}
+ //DimensionFilter['time'] = theTime
+
+ let DimensionFilter = CFR.getdata2DGrid().DimensionFilter
 
  let x = CFR.getCellValue(gMAP_METADATA['variable'],
-                          null, 
+                          DimensionFilter,
                           evt.latlng.lng,
                           evt.latlng.lat,
-                          null)
+                          null) //gMAP_METADATA["cell_omit_value"],
 
- if ((!x) && (x != 0)) return 
+ if ((!x) && (x !=0))
+  return
 
- let dl = document.createElement('dl')
- dl.setAttribute('class', "popup")
+ let msg = 'Value: '+ x.toString() + '\n'+
+           'Date: '+ timeValue.toString() + '\n'+
+           'Lat: '+ evt.latlng.lat.toString() + '\n'+
+           'Lon: '+ evt.latlng.lng.toString()
 
- var dt = document.createElement('dt')
- dt.textContent = 'Value:'
- dl.appendChild(dt)
- var dd = document.createElement('dd')
- dd.setAttribute('class', "popup_value")
- dd.textContent = x
- dl.appendChild(dd)
-
- let bound_filters = {}
- bound_filters["Longitude"] = evt.latlng.lng
- bound_filters["Latitude"] = evt.latlng.lat
- for (let f in bound_filters) {
-  var dt = document.createElement('dt')
-  dt.textContent = f
-  dl.appendChild(dt)
-  var dd = document.createElement('dd')
-  dd.textContent = bound_filters[f] 
-  dl.appendChild(dd)
- }
-
- gPOPUP = L.popup().setLatLng(evt.latlng).setContent(dl)
-
- gPOPUP.openOn(map)
+ status_msg(msg)
 }
 
 function make_info_dialog() {
@@ -563,8 +509,12 @@ function make_info_dialog() {
   gMAP_METADATA['variable']
  document.getElementById('info_legend').src = 
   createColorLegendImg(gMAP_METADATA["cell_color_stops"])
+ document.getElementById('arrow_legend').src = 
+  createColorLegendImg(gMAP_METADATA["arrow_color_stops"])
  document.getElementById('info_author_comment').textContent = 
   gMAP_METADATA['author_comment']
+ document.getElementById('info_dataset_dates').textContent = 
+  gDATASET_TIME_MESSAGE
 
  document.getElementById('info_related_links').innerHTML = null
  let links = gMAP_METADATA['related_links']
@@ -638,12 +588,7 @@ window.onload = map_startup
  <div id="map" style="overflow:hidden; width:100%; height:100%;"> 
   <div class="map_headings">
    <span id="map_title" class="map_title"></span><br>
-   <select id="select_state">
-    <option value="none">State</option>
-   </select>
-   <select id="select_survey" disabled="disabled">
-    <option value="none">Survey</option>
-   </select>
+   <span id="map_info" class="map_info"></span><br>
   </div>
   <div class="map_buttons">
    <button id="button_zoom_in" title="Zoom In"><i class="fa fa-plus"></i></button><br>
@@ -658,12 +603,19 @@ window.onload = map_startup
    <h3>Information</h3>
   </p>
   <p>
-    <h4>Map Legend</h4>
+    <h4>Layer Map Legend</h4>
     <img alt="Legend" id="info_legend" class="information" src="">
+    <h4>Arrow Map Legend</h4>
+    <img alt="Legend" id="arrow_legend" class="information" src="">
+  </p>
   </p>
   <p>
    <h4>Map Instructions</h4>
     <span id="info_author_comment" class="information"></span>
+  </p>
+  </p>
+   <h4>Possible dataset date/time ranges</h4>
+    <span id="info_dataset_dates" class="information"></span>
   </p>
   <p>
    <h4>Related Links</h4>

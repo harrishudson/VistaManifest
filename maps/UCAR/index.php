@@ -19,6 +19,7 @@
       <li><a href="UCAR_US_forecast_precip1.php">Probability Total Precipitation (12_Hour Accumulation) above_0.254 kg.m-2</a></li>
       <li><a href="UCAR_US_forecast_precip_totals1.php">Total Precipitation (6_Hour Accumulation) @ Ground or water surface</a></li>
       <li><a href="UCAR_US_forecast_total_cloud_cover.php">Total Cloud Cover @ Ground or water surface</a></li>
+      <li><a href="UCAR_US_forecast_wind1.php">Forecast Wind - Timeseries</a></li>
       <li><a href="UCAR_US_forecast_min_temp1.php">Minimum Temperature (12_Hour Minimum) @ Specified height level above ground</a></li>
       <li><a href="UCAR_US_forecast_max_temp1.php">Maximum Temperature (12_Hour Maximum) @ Specified height level above ground</a></li>
      </ul>
@@ -50,8 +51,8 @@
    </dd>
    <dt>Server endpoint used for these Visualizations</dt>
    <dd>
-    <a href="https://thredds.ucar.edu/thredds/catalog/catalog.html">THREEDS Server</a><br/>
-    <a href="https://thredds.ucar.edu/thredds/info/serverInfo.html">THREEDS Server Info Page</a><br/>
+    <a href="https://thredds.ucar.edu/thredds/catalog/catalog.html">THREDDS Server</a><br/>
+    <a href="https://thredds.ucar.edu/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br/>
     <a href="https://www.unidata.ucar.edu/data/guidelines.html">Guidelines for Data Use</a><br/>
     <a href="https://www.unidata.ucar.edu/">Server website</a><br/>
    </dd>

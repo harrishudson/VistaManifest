@@ -19,6 +19,16 @@
       <li><a href="COASTWATCH_NOAA_precip1.php">Latest (map)</a></li>
      </ul>
     </li>
+    <li>NCEI Blended Seawinds Analysis at STAR THREDDS Server
+     <ul>
+      <li>Global 10 km Blended Daily Seawinds UVComp (Aggregated View)
+       <ul>
+        <li><a href="COASTWATCH_NOAA_seawinds_latest.php">Latest</a>
+            <a href="COASTWATCH_NOAA_seawinds_latest_map.php">(Map)</a></li>
+       </u>
+      </li>
+     </ul>
+    </li>
    </ul>
   </li>
   <li>Datasets (PSL)
@@ -35,6 +45,12 @@
           <a href="PSL_NOAA_min_temp1_map.php">(Map)</a></li>
       <li><a href="PSL_NOAA_max_temp1.php">(tmax) Daily Files</a>
           <a href="PSL_NOAA_max_temp1_map.php">(Map)</a></li>
+     </ul>
+    </li>
+    <li>NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1
+     <ul>
+      <li><a href="PSL_NOAA_sst1.php">Daily Files</a>
+          <a href="PSL_NOAA_sst1_map.php">(Map)</a></li>
      </ul>
     </li>
    </ul>

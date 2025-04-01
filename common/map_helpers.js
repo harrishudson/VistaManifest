@@ -1,4 +1,4 @@
-/* Copyright (c) Harris Hudson 2024 */
+/* Copyright (c) Harris Hudson 2025 */
 
 // Legend Image Creator
 // --------------------

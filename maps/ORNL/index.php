@@ -33,9 +33,9 @@
    </dd>
    <dt>Server endpoint used for these Visualizations</dt>
    <dd>
-    <a href="https://thredds.daac.ornl.gov/thredds/catalog.html">THREEDS Server</a><br/>
+    <a href="https://thredds.daac.ornl.gov/thredds/catalog.html">THREDDS Server</a><br/>
     <a href="https://daac.ornl.gov/">Server website</a><br/>
-    <a href="https://thredds.daac.ornl.gov/thredds/serverInfo.html">THREEDS Server Info Page</a><br/>
+    <a href="https://thredds.daac.ornl.gov/thredds/serverInfo.html">THREDDS Server Info Page</a><br/>
    </dd>
   </dl>
  </p>

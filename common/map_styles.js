@@ -1,4 +1,8 @@
-/* Copyright (c) Harris Hudson 2024 */
+/* Copyright (c) Harris Hudson 2025 */
+
+import { CFUtils } from './CFRender.js'
+
+let cfu = new CFUtils()
 
 export const probability_percentage_stops = [
   { value: 0, color: "#ffffff", opacity: 0.2 },    // No chance, fully transparent
@@ -171,3 +175,62 @@ export const elevation_meters_stops =  [
   { value: 1800, color: "#f03b20", opacity: 1 },  // Red-Orange for mountain slopes
   { value: 2000, color: "#bd0026", opacity: 1 }   // Deep Red for peaks
  ]
+
+export const wind_magnitude_cell_stops = [
+  { value: 0, color: "#ffffff" },
+  { value: 1, color: "#cce6ff" },
+  { value: 5, color: "#66b3ff" },
+  { value: 10, color: "#0066cc" },
+  { value: 15, color: "#ffcc00" },
+  { value: 20, color: "#ff6600" },
+  { value: 25, color: "#cc0000" }
+ ]
+
+export const wind_magnitude_arrow_stops = [
+  { value: 0, color: "#cccccc" },  // Gray (calm)
+  { value: 2, color: "#00e6e6" },  // Cyan (light wind)
+  { value: 6, color: "#ffdd00" },  // Yellow (moderate wind)
+  { value: 11, color: "#ff6600" }, // Orange (strong wind)
+  { value: 16, color: "#cc00ff" }, // Purple (very strong)
+  { value: 21, color: "#ffffff" }  // White (extreme wind)
+ ]
+
+// Generic Wind Vector Styles
+
+export function windOmitArrow(data) {
+ if (data['magnitude'] < 3)
+  return true
+ return false 
+}
+
+export function windArrowOpacity(data) {
+ return Math.max(0,Math.min(1,(0.4+(data['magnitude']/25))))
+}
+
+export function windScaleArrow(data) {
+ const minMag = 0.5
+ const maxMag = 25;  
+ return Math.min(0.7,Math.max(0,(data['magnitude'] - minMag)/(maxMag - minMag)))
+}
+
+export function windAnimateArrow(data) {
+ const baseDuration = 5
+ const minDuration = 0.8
+ const scaleFactor = 4
+ return Math.max(minDuration, baseDuration - data['magnitude'] / scaleFactor)
+}
+
+export function windArrowFill(data) {
+ return cfu.steppedHexColor(data['magnitude'], wind_magnitude_arrow_stops)
+}
+
+export function windCellFill(cellData) {
+ return cfu.steppedHexColor(cellData.value, wind_magnitude_cell_stops)
+}
+
+export function windOmitCell(cellData) {
+ if (cellData.value <= 0.5)
+  return true;
+ return false;
+}
+

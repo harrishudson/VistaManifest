@@ -1,9 +1,9 @@
 <?php
-/* Copyright (c) Harris Hudson 2024 */
+/* Copyright (c) Harris Hudson 2025 */
 
 function get_root() {
  //NOTE: This needs to be setup on install
- return '';
+ return 'https://vistamanifest.com';
 }
 
 function escHTML($string) {
@@ -34,7 +34,7 @@ function page_top($title, $scale = null) {
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-{$nonce}'">
   {$viewport}
   <meta name="description" content="Visualizations of Climate Forecasting Open Data">
-  <meta name="author" content="Copyright (c) Harris Hudson 2024.  harris@harrishudson.com.  https://harrishudson.com">
+  <meta name="author" content="Copyright (c) Harris Hudson 2025.  harris@harrishudson.com.  https://harrishudson.com">
   <link rel="stylesheet" href="{$root}/common/common.css">
   <script nonce="{$nonce}" src="{$root}/common/common.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" 
