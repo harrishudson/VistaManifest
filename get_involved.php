@@ -16,10 +16,10 @@
  If you have a suggestion for a new live data map rendering, please see below. 
 
  <h4>Have a Map Suggestion?</h4>
- If you have some NetCDF Open Datasets, in CF format, that require a basic grid rendering then
- please reach out with your suggestion and it may be considered for inclusion here.  Currently
- grid rendering is the only type of rendering available (directional vector rendering is work
- in progress).  To consider your dataset for possible inclusion on this website, ideally it should be;
+ If you have some NetCDF Open Datasets, in CF format, that require a basic grid rendering or
+ a vector (wind) rendering, then please reach out with your suggestion and it may be considered for
+ inclusion here.  Both Grid and Vector rendering is available.  To consider your dataset for possible
+ inclusion on this website, ideally it should be;
  <ol>
   <li>A visualization for educational purposes</li>
   <li>Open Data - that can be accessed without requring any user authentication nor API key registration</li>
