@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top("BOM Earth3 Projected. Hourly Minimum Near-Surface Air Temperature", "no");
+ $nonce = page_top("BOM Earth3 Projected. Hourly Maximum Near-Surface Wind Speed", "no");
 ?>
 
 <script nonce="<?php echo $nonce;?>" type="module">
@@ -15,30 +15,30 @@ import { getCache, setCache, cleanCache, openDatabase,
  from '../../common/offline_storage_helpers.js'
 import { SphericalProjection }
  from '../../common/projection_helpers.js'
-import { surface_temperature_kelvin_stops } 
+import { wind_magnitude_cell_stops }
  from '../../common/map_styles.js'
 
 // Primary Map metadata
 const gMAP_METADATA = {
- "latest_endpoint": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/tasmin/latest/catalog.xml",
+ "latest_endpoint": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/sfcWind/latest/catalog.xml",
  "subsetting_endpoint_prefix": 
-  "https://thredds.nci.org.au/thredds/ncss/grid/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/tasmin/latest/",
+  "https://thredds.nci.org.au/thredds/ncss/grid/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/sfcWind/latest/",
  "subsetting_query_string_suffix": 
   "&addLatLon=true&accept=netcdf&format=netcdf3",
- "variable": 'tasmin',
+ "variable": 'sfcWind',
  "map_title": 
-  "BOM Earth3 Projected. Hourly Minimum Near-Surface Air Temperature",
+  "BOM Earth3 Projected. Hourly Maximum Near-Surface Wind Speed",
  "author_comment": 
-  "Select a Date. Click to view Minimum Temperature.",
+  "Select a Date. Click to view Wind Speed.",
  "catalog_filter_string":
-  "tasmin_AUS-15_EC-Earth3_ssp585_r1i1p1f1_BOM_BARPA-R_v1-r1_1hr_",
+  "sfcWind_AUS-15_EC-Earth3_ssp585_r1i1p1f1_BOM_BARPA-R_v1-r1_1hr_",
  "related_links": 
   [{"label": "THREDDS Endpoint",
-    "href": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/tasmin/latest/catalog.html"}],
+    "href": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/sfcWind/latest/catalog.html"}],
  "map_attribution": 'Data &copy; ANU',
  "map_type": 'grid',
- "layer_starting_opacity": 0.5,
- "cell_color_stops": surface_temperature_kelvin_stops,
+ "layer_starting_opacity": 0.4,
+ "cell_color_stops": wind_magnitude_cell_stops,
  "cell_omit_value": function(val) {
   if (((!val) && (val != 0)) || (!isFinite(val)))
    return true

@@ -20,6 +20,7 @@ if (location.protocol == 'http:')
     <li><a href="./maps/UCAR/">University Corporation for Atmospheric Research (UCAR)</a></li>
     <li><a href="./maps/NOAA/">National Oceanic and Atmospheric Administration (NOAA)</a></li>
     <li><a href="./maps/ORNL/">Oak Ridge National Laboratory (ORNL)</a></li>
+    <li><a href="./maps/PACIOOS/">Pacific Islands Ocean Observing System (PacIOOS)</a></li>
    </ul>
   </li>
   <li>Australia

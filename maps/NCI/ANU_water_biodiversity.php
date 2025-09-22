@@ -235,7 +235,7 @@ function redraw_map_layer() {
                  "&north="+encodeURIComponent(north)+
                  "&south="+encodeURIComponent(south)
  
- //HozizStride
+ //HorizStride
  let sw_pixel = map.latLngToContainerPoint([south, west])
  let ne_pixel = map.latLngToContainerPoint([north, east])
  let img_x_range = Math.abs(sw_pixel.x - ne_pixel.x)

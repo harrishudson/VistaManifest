@@ -18,6 +18,7 @@
        <li><a href="ANU_BOM_Earth3_max_temp.php">Maximum Temperature</a></li>
        <li><a href="ANU_BOM_Earth3_prc.php">Convective Precipitation</a></li>
        <li><a href="ANU_BOM_Earth3_clt.php">Total Cloud Cover</a></li>
+       <li><a href="ANU_BOM_Earth3_windspeed.php">Wind Speed</a></li>
       </ul>
      </li>
     </ul>

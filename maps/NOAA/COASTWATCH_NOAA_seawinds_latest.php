@@ -160,7 +160,7 @@ function redraw_image() {
 
  var query_string = `?var=u_wind&var=v_wind&var=${gMAP_METADATA['variable']}`
 
- //HozizStride
+ //HorizStride
  let image_size = {x: 800, y: 400}  // Use a set image size for info
  let HorizStride = gNETCDF_TDS.getHorizStride(image_size, queryBounds, 3)
  

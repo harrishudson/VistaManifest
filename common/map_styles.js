@@ -161,20 +161,58 @@ export const sea_surface_temperature_celsius_stops = [
   { value: 35, color: "#730000", opacity: 1 }     // Dark Red for superheated regions
  ]
 
-export const elevation_meters_stops =  [
-  { value: -5, color: "#2c7fb8", opacity: 1 },    // Deep Blue for below sea level
-  { value: 0, color: "#41b6c4", opacity: 1 },     // Light Blue for sea level
-  { value: 100, color: "#66c2a4", opacity: 1 },   // Teal for coastal lowlands
-  { value: 300, color: "#a1dab4", opacity: 1 },   // Light Green for lowlands
-  { value: 500, color: "#d0e9b1", opacity: 1 },   // Pale Green for plains
-  { value: 700, color: "#ffffcc", opacity: 1 },   // Light Yellow for gradual elevation
-  { value: 900, color: "#ffeda0", opacity: 1 },   // Soft Yellow for rolling terrain
-  { value: 1200, color: "#fed976", opacity: 1 },  // Yellow-Orange for mid-elevations
-  { value: 1400, color: "#feb24c", opacity: 1 },  // Orange for foothills
-  { value: 1600, color: "#fd8d3c", opacity: 1 },  // Deep Orange for highlands
-  { value: 1800, color: "#f03b20", opacity: 1 },  // Red-Orange for mountain slopes
-  { value: 2000, color: "#bd0026", opacity: 1 }   // Deep Red for peaks
- ]
+export const elevation_meters_stops = [
+  { value: -5,     color: "#41b6c4", opacity: 1 }, // Light Blue near coast
+  { value: 0,      color: "#66c2a4", opacity: 1 }, // Teal for sea level
+  { value: 100,    color: "#a1dab4", opacity: 1 }, // Light Green for coastal lowlands
+  { value: 300,    color: "#ccebc5", opacity: 1 }, // Softer green for lowlands
+  { value: 500,    color: "#e6f5c9", opacity: 1 }, // Pale Green plains
+  { value: 700,    color: "#ffffcc", opacity: 1 }, // Light Yellow gradual rise
+  { value: 900,    color: "#ffeda0", opacity: 1 }, // Yellow low hills
+  { value: 1200,   color: "#fed976", opacity: 1 }, // Yellow-Orange foothills
+  { value: 1500,   color: "#feb24c", opacity: 1 }, // Orange highlands
+  { value: 2000,   color: "#fd8d3c", opacity: 1 }, // Deep Orange slopes
+  { value: 2500,   color: "#f03b20", opacity: 1 }, // Red-orange steep terrain
+  { value: 3000,   color: "#bd0026", opacity: 1 }, // Deep Red rugged mountains
+  { value: 4000,   color: "#800026", opacity: 1 }, // Dark Maroon extreme peaks
+  { value: 5000,   color: "#54278f", opacity: 1 }, // Purple for high alpine
+  { value: 6000,   color: "#756bb1", opacity: 1 }, // Violet for very high alpine
+  { value: 7000,   color: "#bcbddc", opacity: 1 }, // Grayish purple transition
+  { value: 8000,   color: "#f7f7f7", opacity: 1 }, // Snow-capped zones
+  { value: 8850,   color: "#ffffff", opacity: 1 }  // Pure White (Everest)
+];
+
+export const bathymetry_meters_stops =  [
+  { "value": 0, "color": "#fefefe" },     // sea level edge (white highlight)
+  { "value": -50, "color": "#ffb347" },   // shallow shelf (warm orange)
+  { "value": -200, "color": "#ff7733" },  // upper slope (red-orange)
+  { "value": -1000, "color": "#cc3366" }, // continental slope (magenta)
+  { "value": -3000, "color": "#662e9b" }, // deep purple
+  { "value": -6000, "color": "#2e1a47" }, // abyssal dark purple
+  { "value": -11000, "color": "#0d0d0d" } // trench (black)
+]
+
+export const shoreline_distance_stops = [
+  // Very close to shore
+  { value: 0,   color: "#ffffcc", opacity: 1.0 },   // bright yellow (beach/shoreline)
+  { value: 2,   color: "#a1dab4", opacity: 1.0 },   // aqua green (immediate coastal water / edge land)
+
+  // Coastal zone
+  { value: 10,  color: "#41b6c4", opacity: 0.95 },  // teal (shallow seas / coastal plains)
+  { value: 25,  color: "#2c7fb8", opacity: 0.9 },   // medium blue (continental shelf / nearshore land)
+
+  // Regional transition
+  { value: 100, color: "#253494", opacity: 0.85 },  // deep navy (open ocean / deeper inland)
+  { value: 250, color: "#081d58", opacity: 0.8 },   // very dark blue (remote ocean centers)
+
+  // Inland far from coasts
+  { value: 500,  color: "#fed976", opacity: 0.85 }, // golden yellow (continental interiors)
+  { value: 1000, color: "#fd8d3c", opacity: 0.85 }, // orange (far inland desert/plateau)
+  { value: 2000, color: "#e31a1c", opacity: 0.9 },  // red (deep continental heartlands)
+
+  // Extremely remote (both land + sea)
+  { value: 3000, color: "#800026", opacity: 0.95 }  // dark crimson (Sahara core, Pacific center)
+];
 
 export const wind_magnitude_cell_stops = [
   { value: 0, color: "#ffffff" },
