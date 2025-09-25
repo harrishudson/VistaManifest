@@ -272,3 +272,141 @@ export function windOmitCell(cellData) {
  return false;
 }
 
+export const wave_magnitude_cell_stops = [
+  { value: 0,   color: "#f7fcf0" }, // calm: almost white/seafoam
+  { value: 0.5, color: "#ccebc5" }, // pale aqua
+  { value: 1,   color: "#7bccc4" }, // teal
+  { value: 2,   color: "#2b8cbe" }, // deep blue
+  { value: 3,   color: "#0868ac" }, // stronger blue
+  { value: 4,   color: "#41ab5d" }, // green cresting seas
+  { value: 6,   color: "#feb24c" }, // golden orange for big waves
+  { value: 8,   color: "#f03b20" }, // red for dangerous seas
+  { value: 10,  color: "#bd0026" }  // dark red for extreme
+]
+
+export const wave_magnitude_arrow_stops = [
+  { value: 0,   color: "#cccccc" }, // calm: gray
+  { value: 1,   color: "#00bfff" }, // light blue
+  { value: 2,   color: "#0077be" }, // ocean blue
+  { value: 4,   color: "#00cc66" }, // green (growing seas)
+  { value: 6,   color: "#ffcc00" }, // yellow (large seas)
+  { value: 8,   color: "#ff6600" }, // orange (very large)
+  { value: 10,  color: "#cc0000" }  // red (extreme, storm surge)
+]
+
+// Generic Wave Vector Styles
+
+export function waveOmitArrow(data) {
+ if (data['magnitude'] < 0.4)
+  return true
+ return false 
+}
+
+export function waveArrowOpacity(data) {
+ return Math.max(0,Math.min(1,(0.4+(data['magnitude']/10))))
+}
+
+export function waveScaleArrow(data) {
+ const minMag = 0.1
+ const maxMag = 10;  
+ return Math.min(0.8,Math.max(0,(data['magnitude'] - minMag)/(maxMag - minMag)))
+}
+
+export function waveAnimateArrow(data) {
+ const baseDuration = 5
+ const minDuration = 0.8
+ const scaleFactor = 4
+ return Math.max(minDuration, baseDuration - data['magnitude'] / scaleFactor)
+}
+
+export function waveArrowFill(data) {
+ return cfu.steppedHexColor(data['magnitude'], wave_magnitude_arrow_stops)
+}
+
+export function waveCellFill(cellData) {
+ return cfu.steppedHexColor(cellData.value, wave_magnitude_cell_stops)
+}
+
+export function waveOmitCell(cellData) {
+ if (cellData.value <= 0.5)
+  return true;
+ return false;
+}
+
+// Water Velocity (current) Styling
+
+export const water_velocity_color_stops = [
+  { value: 0.0, color: "#000000" },   // calm, black
+  { value: 0.1, color: "#222222" },   // very low flow, near black
+  { value: 0.3, color: "#444444" },   // subtle gray
+  { value: 0.6, color: "#006400" },   // dark green
+  { value: 1.0, color: "#8b0000" },   // dark red
+  { value: 1.5, color: "#ff4500" },   // strong orange-red
+  { value: 2.0, color: "#ff00ff" }    // vivid magenta highlight
+];
+
+export const water_velocity_opacity_stops = [
+  { value: 0.0, opacity: 0.0 },   // invisible at calm
+  { value: 0.1, opacity: 0.4 },
+  { value: 0.3, opacity: 0.6 },
+  { value: 0.6, opacity: 0.8 },
+  { value: 1.0, opacity: 0.9 },
+  { value: 1.5, opacity: 1.0 },
+  { value: 2.0, opacity: 1.0 }
+];
+
+// Generic Water Velocity Vector Styles
+
+export function currentOmitArrow(data) {
+ if (data['magnitude'] < 0.1)
+  return true
+ return false 
+}
+
+export function currentArrowOpacity(data) {
+ return Math.max(0,Math.min(1,(0.5+(data['magnitude']/2))))
+}
+
+export function currentScaleArrow(data) {
+ const minMag = 0.1
+ const maxMag = 1.0
+ const mag = Math.max(0, data['magnitude'] - minMag)
+ const normalized = Math.min(1.2, mag / (maxMag - minMag))
+ const nonlinear = Math.pow(normalized, 0.5); // sqrt scaling
+ const baseScale = 0.5; // never smaller than 25%
+ return Math.max(baseScale, nonlinear)
+}
+
+export function currentAnimateArrow(data) {
+ const baseDuration = 5 
+ const minDuration = 0.8
+ const scaleFactor = 2 
+ return Math.max(minDuration, baseDuration - data['magnitude'] / scaleFactor)
+}
+
+export function currentArrowFill(data) {
+ return cfu.steppedHexColor(data['magnitude'], water_velocity_color_stops)
+}
+
+
+// Surface Air Pressure
+export const pressure_hPa_stops = [
+  { value: 950,  color: "#6e016b", opacity: 0.95 }, // very low, extreme storm
+  { value: 970,  color: "#b2182b", opacity: 0.9 },  // intense low
+  { value: 990,  color: "#ef8a62", opacity: 0.85 }, // low pressure system
+  { value: 1010, color: "#f7f7f7", opacity: 0.6 },  // neutral / mean sea level (~1013)
+  { value: 1030, color: "#67a9cf", opacity: 0.75 }, // moderate high
+  { value: 1050, color: "#2166ac", opacity: 0.9 },  // strong high
+  { value: 1070, color: "#053061", opacity: 0.95 }, // extreme ridge/high
+];
+
+export const pressure_Pa_stops = [
+  { value: 95000,  color: "#6e016b", opacity: 0.95 }, // very low, extreme storm
+  { value: 97000,  color: "#b2182b", opacity: 0.9 },  // intense low
+  { value: 99000,  color: "#ef8a62", opacity: 0.85 }, // low pressure system
+  { value: 101000, color: "#f7f7f7", opacity: 0.6 },  // neutral / mean sea level (~101325 Pa)
+  { value: 103000, color: "#67a9cf", opacity: 0.75 }, // moderate high
+  { value: 105000, color: "#2166ac", opacity: 0.9 },  // strong high
+  { value: 107000, color: "#053061", opacity: 0.95 }, // extreme ridge/high
+];
+

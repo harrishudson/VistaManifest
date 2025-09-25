@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1', 'yes');
+ $nonce = page_top('HYCOM Global Sea Water Velocity - Latest', 'yes');
 ?>
 
 <script nonce="<?php echo $nonce;?>" type="module">
@@ -8,50 +8,39 @@ import { CFUtils, CFRender }
  from '../../common/CFRender.js'
 import { TDSCatalogParser, TDSMetadataParser } 
  from '../../common/THREDDS_utils.js'
-import { createColorLegendImg, tile_providers, fitSvgContainerToViewport, 
+import { createColorLegendImg, tile_providers, fitSvgContainerToViewport,
          pad, getOneMonthPrior, formatDateToYYYYMMDD } 
  from '../../common/map_helpers.js'
 import { getCache, setCache } 
  from '../../common/offline_storage_helpers.js'
 import { mollweideProjection, inverseMollweideProjection, isMollweidePointInProjection } 
  from '../../common/projection_helpers.js'
-import { sea_surface_temperature_celsius_stops } 
+import { currentOmitArrow, currentArrowOpacity, currentScaleArrow,
+         currentAnimateArrow, currentArrowFill, water_velocity_color_stops }
  from '../../common/map_styles.js'
 
 // Primary Map metadata
 const gMAP_METADATA = {
- "proxy": "PSL_thredds_proxy.php?url=",
+ "proxy": "HYCOM_thredds_proxy.php?url=",
  "catalog_endpoint": 
-  "/catalog/Datasets/noaa.oisst.v2.highres/catalog.xml",
+  "/ncss/grid/ESPC-D-V02/ice/dataset.xml",
  "subsetting_endpoint_prefix": 
-  "/ncss/grid/Datasets/noaa.oisst.v2.highres/",
+  "/ncss/ESPC-D-V02/ice",
  "subsetting_query_string_suffix": 
-  "&addLatLon=true&accept=netcdf&format=netcdf3",
- "variable": "sst",
+  "&disableLLSubset=on&disableProjSubset=on&&addLatLon=true&accept=netcdf&format=netcdf3",
+ "variable": "ssu",
+ "variable2": "ssv",
  "author_comment": 
-  "Select a day to display Sea Surface Temperature.",
+  "Click/Tap to display Sea Water Velocity.",
  "related_links": 
   [{"label":"THREDDS Endpoint",
-    "href":"https://psl.noaa.gov/thredds/catalog/Datasets/noaa.oisst.v2.highres/catalog.html"}],
- "layer_starting_opacity": 0.7,
- "cell_color_stops": sea_surface_temperature_celsius_stops,
- "cell_omit_value": function(val) {
-  if (((!val) && (val != 0)) || (!isFinite(val)))
-   return true
-  return false
- },
- "cell_opacity": 1,
+    "href":"https://tds.hycom.org/thredds/catalogs/ESPC-D-V02_ice.html"}],
+ "layer_starting_opacity": 0.9,
+ "arrow_color_stops": water_velocity_color_stops,
+ "arrow_opacity": 1,
 }
 
 let cfu = new CFUtils()
-
-function fillCell(cellData) {
- return cfu.steppedHexColor(cellData.value, gMAP_METADATA['cell_color_stops'])
-}
-
-function omitCell(cellData) {
- return gMAP_METADATA['cell_omit_value'](cellData.value) 
-}
 
 // Main script
 
@@ -59,15 +48,10 @@ var CFR  // CFR is the main CFRender object
 var gOVERLAY_OPACITY = gMAP_METADATA["layer_starting_opacity"]
 var gNETCDF_TDS = null
 var gNETCDF_SUBSET_ENDPOINT = null
-var gNETCDF_EXTENT_CACHE = null
 var gNETCDF_PROJECTION_CACHE = null
 var gDATASET_TIME_MESSAGE = null
-var gCHOSEN_DAY = null
 
 function fetch_catalog_index() {
- let d = document.getElementById('chosen_day')
- d.disabled = true
-
  let proxy = gMAP_METADATA["proxy"]
  let endpoint = gMAP_METADATA["catalog_endpoint"]
  let endpoint_url = proxy + encodeURIComponent(endpoint)
@@ -97,6 +81,8 @@ function fetch_catalog_index() {
 function process_catalog_index(data) {
  dequeue_throbber()
 
+ gNETCDF_SUBSET_ENDPOINT = gMAP_METADATA["subsetting_endpoint_prefix"] 
+
  if (!data) {
   remove_overlay()
   clear_render()
@@ -106,112 +92,12 @@ function process_catalog_index(data) {
 
  let parser = new DOMParser()
  var xmlDoc = parser.parseFromString(data,"text/xml")
- var TDS = new TDSCatalogParser(xmlDoc)
- populate_dates(TDS)
-}
+ gNETCDF_TDS = new TDSMetadataParser(xmlDoc)
 
-function populate_dates(TDS) {
- let datasets = TDS.catalog_dataset_datasets
- let reg = new RegExp('sst\.day\.mean')
- let rain_datasets =
-  datasets.filter(function(obj) {return reg.test(obj.name)});
-
- let yy_array_stripped = 
-  rain_datasets.map(function(x) { return  x.name
-    .replaceAll('sst.day.mean.','')
-    .replaceAll('.nc','')})
-
- let yy_string_array = yy_array_stripped.filter(x => isFinite(x)) 
- let yy_array = yy_string_array.map(x => parseInt(x)) 
- 
- yy_array.sort((a, b) => a - b);
- let yy_start = yy_array[0]
- let yy_end = yy_array[yy_array.length - 1]
-
- let begin_day = yy_start.toString()+'-01-01'
- let end_day = yy_end.toString()+'-12-31'
-
- //let date_val = end_day  // TODO consider; getOneMonthPrior(new Date())
- let date_val = getOneMonthPrior(new Date())
-
- let d = document.getElementById('chosen_day')
- d.min = begin_day
- d.max = end_day
- //d.value = date_val 
- d.value = formatDateToYYYYMMDD(date_val) 
- d.disabled = false
-
- gDATASET_TIME_MESSAGE = 
-  'Dates available; '+
-  yy_start.toString()+ ' to ' +
-  yy_end.toString()
-
- status_msg(gDATASET_TIME_MESSAGE)
-
- chosen_day_change()
-}
-
-function chosen_day_change(e) {
- fetch_date_metadata()
-}
-
-function fetch_date_metadata() {
- let d = document.getElementById('chosen_day').value
- gCHOSEN_DAY = d
- let chosen_year = d.substring(0,4)
-
- let endpoint = 
-  gMAP_METADATA["subsetting_endpoint_prefix"] +
-  'sst.day.mean.'+
-  chosen_year.toString() +
-  '.nc'
-
- let dataset_endpoint = endpoint + '/dataset.xml'
-
- let proxy = gMAP_METADATA["proxy"]
- let dataset_proxy_url = proxy + encodeURIComponent(dataset_endpoint)
-
- queue_throbber()
-
- fetch(dataset_proxy_url)
-  .then(response => response.text())
-  .then(str => process_netcdf_metadata(str, endpoint))
-  .catch(error => { 
-   dequeue_throbber()
-   remove_overlay()
-   clear_render()
-   status_msg(error) 
-  })
-}
-
-function process_netcdf_metadata(data, endpoint) {
- dequeue_throbber()
-
- if (!data) {
-  remove_overlay()
-  clear_render()
-  status_msg('No Data Found.')
-  return
- }
- try {
-  let parser = new DOMParser()
-  var xmlDoc = parser.parseFromString(data,"text/xml")
-  gNETCDF_TDS = new TDSMetadataParser(xmlDoc)
-  gNETCDF_SUBSET_ENDPOINT = endpoint
- } catch(e) {
-  remove_overlay()
-  clear_render()
-  status_msg('No Data Found.')
-  return
- }
- 
  redraw_image()
 }
 
 function redraw_image() {
- if (!gNETCDF_SUBSET_ENDPOINT)
-  return
-
  // Grid Bounds
  let LatLonBox = gNETCDF_TDS.getLatLonBox()
  let east = LatLonBox['east']
@@ -220,16 +106,19 @@ function redraw_image() {
  let south = LatLonBox['south']
  let queryBounds = [[west, south],[east, north]]
 
- var query_string = "?var="+encodeURIComponent(gMAP_METADATA.variable)
+ var query_string = "?var="+encodeURIComponent(gMAP_METADATA.variable)+
+                    "&var="+encodeURIComponent(gMAP_METADATA.variable2)
 
  //HorizStride
  let image_size = {x: 800, y: 400}  // Use a set image size for info
- let HorizStride = gNETCDF_TDS.getHorizStride(image_size, queryBounds, 3)
+ let HorizStride = gNETCDF_TDS.getHorizStride(image_size, queryBounds)
  
  query_string += "&horizStride="+encodeURIComponent(HorizStride)
 
- let d = document.getElementById('chosen_day').value
- let theDate = new Date(d).toISOString()
+ let reftime_units = gNETCDF_TDS.Axes['time']['units']
+ let time_values = gNETCDF_TDS.Axes['time']['values']
+ let theDate = cfu.getTimeISOString(time_values[time_values.length - 1], reftime_units)
+ gDATASET_TIME_MESSAGE = theDate
 
  query_string += "&time="+encodeURIComponent(theDate)
  
@@ -246,7 +135,6 @@ function fetch_netcdf_for_render(query_string) {
  let proxy = gMAP_METADATA["proxy"]
  let netcdf_subset_url_endpoint = gNETCDF_SUBSET_ENDPOINT + query_string
  let netcdf_subset_url = proxy + encodeURIComponent(netcdf_subset_url_endpoint)
- //let netcdf_subset_url = gNETCDF_SUBSET_ENDPOINT + query_string
                        
  queue_throbber()
 
@@ -270,7 +158,7 @@ function process_netcdf(barray) {
   return
  }
 
- CFR = new CFRender(barray, gNETCDF_EXTENT_CACHE, gNETCDF_PROJECTION_CACHE)
+ CFR = new CFRender(barray, null, gNETCDF_PROJECTION_CACHE)
   
  render_image()
 }
@@ -281,17 +169,31 @@ async function render_image() {
   return
  }
 
- let img1 = await CFR.draw2DbasicGrid(gMAP_METADATA['variable'], 
-                                      null, 
-                                      mollweideProjection,
-                                      'svg',
-                                      {"fill": fillCell,
-                                       "omit": omitCell,
-                                       "opacity": gOVERLAY_OPACITY,
-                                       "stroke": "none",
-                                       "strokeWidth": 0,
-                                       "meridianSkip": 180
-                                      })
+ let imgWidth = 800
+ let imgHeight = 400
+
+ let img1 = CFR.draw2DbasicVector(gMAP_METADATA['variable'],
+                                  gMAP_METADATA['variable2'],
+                                  0,
+                                  {},
+                                  imgWidth,
+                                  imgHeight,
+                                  mollweideProjection,
+                                  'svg',
+                                  {"omit": currentOmitArrow,
+                                   "fill": currentArrowFill,
+                                   "opacity": currentArrowOpacity,
+                                   "symbol": 'arrow',
+                                   "idealArrowSize": 22,
+                                   "symbolSize": currentScaleArrow,
+                                   "animateDuration": currentAnimateArrow,
+                                   "nonOrthogonalProjection": true,
+                                   "disableOpacityEasing": true,                                   
+                                   "eventListeners": [
+                                    ['click', show_arrow_data, null],
+                                   ]
+                                 })
+
  remove_overlay()
  let container = document.getElementById('img')
  container.appendChild(img1)
@@ -300,7 +202,6 @@ async function render_image() {
                "north": bbox[1][1], "south": bbox[0][1]} 
  fitSvgContainerToViewport(container, bounds)
 
- gNETCDF_EXTENT_CACHE = CFR.extentCache
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
  
  dequeue_throbber()
@@ -313,7 +214,6 @@ function remove_overlay() {
 function clear_render() {
  gNETCDF_SUBSET_ENDPOINT = null
  gNETCDF_PROJECTION_CACHE = null
- gCHOSEN_DAY = null
  CFR = null
 }
 
@@ -321,42 +221,9 @@ function set_img_opacity() {
  document.getElementById('img').style.opacity = gOVERLAY_OPACITY
 }
 
-function container_click(e) {
- let w = this.clientWidth
- let h = this.clientHeight
-
- if (!isMollweidePointInProjection(e.layerX, e.layerY, w, h))
-  return
-
- let ll = 
-  inverseMollweideProjection(e.layerX, e.layerY, w, h, 0)
-
- if (!CFR) return
-
- let theTime = CFR.netCDF.getDataVariable('time')
- let DimensionFilter = CFR.data2DGrid.DimensionFilter
-
- let x = CFR.getCellValue(gMAP_METADATA['variable'],
-                          //{time: theTime[0]},
-                          DimensionFilter,
-                          ll.lon,
-                          ll.lat,
-                          null)
-
- if ((!x) && (x != 0)) return 
-
- let timeUnits = CFR.getVariableUnits('time')
- let timeValue = cfu.getTimeISOString(theTime, timeUnits)
-
- status_msg('Value: '+
-            x.toString()+ '\n'+
-            'Date: '+
-            //gCHOSEN_DAY+ '\n'+
-            timeValue+ '\n'+
-            'Lat: '+
-            ll.lat.toString() + '\n'+
-            'Lon: '+
-            ll.lon.toString())
+function show_arrow_data(e) {
+ let arrow_data = e.srcElement.dataset
+ status_msg(`Avg Arrow Magitude: ${arrow_data["value_magnitude"]},\nAvg Arrow Direction: ${arrow_data["value_direction"]}`)
 }
 
 function make_info_dialog() {
@@ -436,10 +303,8 @@ function page_startup() {
  set_img_opacity()
  fetch_catalog_index() 
 
- document.getElementById('chosen_day').addEventListener('input', chosen_day_change)
- document.getElementById('container').addEventListener('click', container_click)
  document.getElementById('page_legend').src = 
-  createColorLegendImg(gMAP_METADATA["cell_color_stops"])
+  createColorLegendImg(gMAP_METADATA["arrow_color_stops"])
 
  document.getElementById("button_info").addEventListener('click', 
   function(e) { 
@@ -503,11 +368,9 @@ window.onload = page_startup
 </script>
 
 <div class="indent">
- <h4>NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1</h4>
+ <h4>HYCOM Global Sea Water Velocity - Latest</h4>
  <p>
   <dl>
-   <dt>Select Day</dt>
-   <dd><input id="chosen_day" type="date" disabled="disabled"/></dd>
    <dt>Controls</dt>
    <dd>
     <button id="button_info" title="Information"><i class="fa fa-info-circle"></i></button>
@@ -518,10 +381,11 @@ window.onload = page_startup
 
  <p>
   <div id="container" 
-   style="position:relative; width:calc(100dvw - 40px); max-width:720px; aspect-ratio:2/1; padding: 0px">
+   style="position:relative; width:calc(100dvw - 40px); max-width:720px; 
+           aspect-ratio:2/1; margin:0px; padding:0px;">
    <img src="<?php echo(get_root()); ?>/common/Mollweide.png" 
-    style="width:100%; height:100%; position:absolute; top:0px; 
-            left:0px; opacity:0.7; padding: 0px;"/>
+    style="width:100%; height:100%; position:absolute; 
+           top:0px; left:0px; opacity:0.7; padding: 0px;"/>
    <svg id="img" 
     style="width:100%; height:100%; position:absolute; 
            top:0px; left:0px; padding:0px;">

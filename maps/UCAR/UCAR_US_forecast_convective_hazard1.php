@@ -248,7 +248,7 @@ function process_netcdf(barray) {
   status_msg('No Data Found.')
   return
  }
- prepare_images(barray)
+ prepare_images(barray) 
 }
 
 function prepare_images(barray) {

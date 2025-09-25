@@ -12,13 +12,15 @@
   <ul>
    <li>Bureau of Meteorology Atmospheric Regional Projections for Australia (BARPA)
     <ul>
-     <li>EC-Earth3/ssp585 - Hourly (Latest)
+     <li>EC-Earth3/ssp585 - Projected Hourly (Latest) - Timeseries
       <ul>
        <li><a href="ANU_BOM_Earth3_min_temp.php">Minimum Temperature</a></li>
        <li><a href="ANU_BOM_Earth3_max_temp.php">Maximum Temperature</a></li>
        <li><a href="ANU_BOM_Earth3_prc.php">Convective Precipitation</a></li>
        <li><a href="ANU_BOM_Earth3_clt.php">Total Cloud Cover</a></li>
        <li><a href="ANU_BOM_Earth3_windspeed.php">Wind Speed</a></li>
+       <li><a href="ANU_BOM_Earth3_surface_air_pressure.php">Surface Air Pressure</a></li>
+       <li><a href="ANU_BOM_Earth3_air_pressure_sea_level.php">Air Pressure Sea Level</a></li>
       </ul>
      </li>
     </ul>

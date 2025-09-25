@@ -48,16 +48,6 @@ const gMAP_METADATA = {
  "bound_dimension_filters": ["height"]
 }
 
-let cfu = new CFUtils()
-
-function fillCell(cellData) {
- return cfu.steppedHexColor(cellData.value, gMAP_METADATA['cell_color_stops'])
-}
-
-function omitCell(cellData) {
- return (gMAP_METADATA['cell_omit_value'](cellData.value))
-}
-
 // Main script
 
 var gOVERLAY = null

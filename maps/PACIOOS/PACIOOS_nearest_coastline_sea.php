@@ -26,7 +26,7 @@ const gMAP_METADATA = {
   "&disableLLSubset=on&disableProjSubset=on&addLatLon=true&accept=netcdf&format=netcdf",
  "variable": 'dist',
  "map_title": "PacIOOS 0.1deg Nearest Coastline (Sea)",
- "author_comment": "Click/tap to display distance in meters",
+ "author_comment": "Click/tap to display distance in kilometers",
  "catalog_filter_string": "",
  "related_links": 
   [{"label": "THREDDS Endpoint",

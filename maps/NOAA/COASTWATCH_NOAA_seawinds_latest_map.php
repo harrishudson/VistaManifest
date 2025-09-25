@@ -39,6 +39,7 @@ const gMAP_METADATA = {
  "variable": "windspeed",
  "cell_color_stops": wind_magnitude_cell_stops,
  "arrow_color_stops": wind_magnitude_arrow_stops,
+ "map_attribution": "Data NOAA Coastwatch",
  "layer_starting_opacity": 0.4,
  "cell_omit_value": function(val) {
   if (((!val) && (val != 0)) || (!isFinite(val)))

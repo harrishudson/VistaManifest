@@ -1,11 +1,11 @@
 <?php
 
- $GLOBALS['CATALOG_PREFIX'] = "https://thredds.daac.ornl.gov/thredds";
- $GLOBALS['ALLOWED_DOMAINS'] = ["thredds.daac.ornl.gov"];
+ $GLOBALS['CATALOG_PREFIX'] = "https://tds.hycom.org/thredds";
+ $GLOBALS['ALLOWED_DOMAINS'] = ["tds.hycom.org"];
  $GLOBALS['ALLOWED_SCHEMES'] = ["https"];
  $GLOBALS['CACHE_LOCATION'] = "./cache";
- $GLOBALS['CACHE_TIMEOUT'] = 30;
- $GLOBALS['CACHE_FILENAME_SUFFIX'] = "ORNL";  // Suffix must not have any spaces
+ $GLOBALS['CACHE_TIMEOUT'] = 480;
+ $GLOBALS['CACHE_FILENAME_SUFFIX'] = "HYCOM";  // Suffix must not have any spaces
  $GLOBALS['USER_AGENT'] = "Vista Manifest Proxy. No CORS headers detected in your responses. More info; vistamanifest.com/about.php";
 
  function error() {

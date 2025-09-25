@@ -43,8 +43,6 @@ const gMAP_METADATA = {
  "cell_opacity": 1,
 }
 
-let cfu = new CFUtils()
-
 function omitCell(cellData) {
  return (gMAP_METADATA['cell_omit_value'](cellData.value))
 }

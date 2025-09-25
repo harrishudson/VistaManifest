@@ -360,7 +360,6 @@ async function render_image() {
  }
 
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
-
  
  // Draw overlay
  let bounds = CFR.getXYbbox().bbox

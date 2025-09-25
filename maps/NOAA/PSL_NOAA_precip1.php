@@ -8,7 +8,7 @@ import { CFUtils, CFRender }
  from '../../common/CFRender.js'
 import { TDSCatalogParser, TDSMetadataParser } 
  from '../../common/THREDDS_utils.js'
-import { createColorLegendImg, tile_providers, 
+import { createColorLegendImg, tile_providers, fitSvgContainerToViewport, 
          getOneMonthPrior, formatDateToYYYYMMDD } 
  from '../../common/map_helpers.js'
 import { getCache, setCache } 
@@ -65,7 +65,6 @@ var gDATASET_TIME_MESSAGE = null
 var gCHOSEN_DAY = null
 
 function fetch_catalog_index() {
-
  let d = document.getElementById('chosen_day')
  d.disabled = true
 
@@ -286,6 +285,10 @@ async function render_image() {
  remove_overlay()
  let container = document.getElementById('img')
  container.appendChild(img1)
+ let bbox = CFR.getXYbbox().bbox
+ let bounds = {"east": bbox[1][0], "west": bbox[0][0], 
+               "north": bbox[1][1], "south": bbox[0][1]} 
+ fitSvgContainerToViewport(container, bounds)
 
  gNETCDF_EXTENT_CACHE = CFR.extentCache
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
@@ -507,12 +510,14 @@ window.onload = page_startup
   <div id="container" 
    style="position:relative; width:calc(100dvw - 40px); max-width:720px; aspect-ratio:2/1; padding: 0px">
    <img src="<?php echo(get_root()); ?>/common/Mollweide.png" 
-    style="width:100%; height:100%; position:absolute; top:0px; left:0px; opacity:0.7; padding: 0px;"/>
+    style="width:100%; height:100%; position:absolute; 
+            top:0px; left:0px; opacity:0.7; padding: 0px;"/>
    <svg id="img" 
-    style="width:100%; height:100%; position:absolute; top:0px; left:0px; padding: 0px;">
+    style="width:100%; height:100%; position:absolute; 
+           top:0px; left:0px; padding: 0px;">
    </svg>
   </div>
- <p>
+ </p>
 
  <p>
   <img id="page_legend" style="max-width: calc(100dvw - 30px);">

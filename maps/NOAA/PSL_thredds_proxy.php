@@ -64,6 +64,7 @@
   
   if (($file_is_cachable) && 
       (file_exists($cache_file)) && 
+      (filesize($cache_file)) && 
       (filemtime($cache_file) > (time() - $GLOBALS['CACHE_TIMEOUT']))) {
    // File is cached and still valid 
    // Don't bother refreshing, just use the file as-is.

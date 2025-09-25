@@ -8,7 +8,7 @@ import { CFUtils, CFRender }
  from '../../common/CFRender.js'
 import { TDSCatalogParser, TDSMetadataParser } 
  from '../../common/THREDDS_utils.js'
-import { createColorLegendImg,  getOneMonthPrior, formatDateToYYYYMMDD } 
+import { createColorLegendImg,  getOneMonthPrior, formatDateToYYYYMMDD, fitSvgContainerToViewport } 
 from '../../common/map_helpers.js'
 import { getCache, setCache } 
  from '../../common/offline_storage_helpers.js'
@@ -64,7 +64,6 @@ var gDATASET_TIME_MESSAGE = null
 var gCHOSEN_DAY = null
 
 function fetch_catalog_index() {
-
  let d = document.getElementById('chosen_day')
  d.disabled = true
 
@@ -95,7 +94,6 @@ function fetch_catalog_index() {
 }
 
 function process_catalog_index(data) {
-
  dequeue_throbber()
 
  if (!data) {
@@ -112,7 +110,6 @@ function process_catalog_index(data) {
 }
 
 function populate_dates(TDS) {
-
  let datasets = TDS.catalog_dataset_datasets
  let reg = new RegExp('tmin')
  let rain_datasets =
@@ -158,7 +155,6 @@ function chosen_day_change(e) {
 }
 
 function fetch_date_metadata() {
-
  let d = document.getElementById('chosen_day').value
  gCHOSEN_DAY = d
  let chosen_year = d.substring(0,4)
@@ -246,7 +242,6 @@ function redraw_image() {
 }
 
 function fetch_netcdf_for_render(query_string) {
-
  let proxy = gMAP_METADATA["proxy"]
  let netcdf_subset_url_endpoint = gNETCDF_SUBSET_ENDPOINT + query_string
  let netcdf_subset_url = proxy + encodeURIComponent(netcdf_subset_url_endpoint)
@@ -266,7 +261,6 @@ function fetch_netcdf_for_render(query_string) {
 }
 
 function process_netcdf(barray) {
-
  if (!barray) {
   dequeue_throbber()
   remove_overlay()
@@ -300,6 +294,10 @@ async function render_image() {
  remove_overlay()
  let container = document.getElementById('img')
  container.appendChild(img1)
+ let bbox = CFR.getXYbbox().bbox
+ let bounds = {"east": bbox[1][0], "west": bbox[0][0], 
+               "north": bbox[1][1], "south": bbox[0][1]} 
+ fitSvgContainerToViewport(container, bounds)
 
  gNETCDF_EXTENT_CACHE = CFR.extentCache
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
@@ -432,7 +430,6 @@ function close_all_dialogs() {
 }
 
 function page_startup() {
-
  set_img_opacity()
  fetch_catalog_index() 
 
@@ -521,12 +518,14 @@ window.onload = page_startup
   <div id="container" 
    style="position:relative; width:calc(100dvw - 40px); max-width:720px; aspect-ratio:2/1; padding: 0px">
    <img src="<?php echo(get_root()); ?>/common/Mollweide.png" 
-    style="width:100%; height:100%; position:absolute; top:0px; left:0px; opacity:0.7; padding: 0px;"/>
+    style="width:100%; height:100%; position:absolute; 
+           top:0px; left:0px; opacity:0.7; padding: 0px;"/>
    <svg id="img" 
-    style="width:100%; height:100%; position:absolute; top:0px; left:0px; padding: 0px;">
+    style="width:100%; height:100%; position:absolute; 
+           top:0px; left:0px; padding: 0px;">
    </svg>
   </div>
- <p>
+ </p>
 
  <p>
   <img id="page_legend" style="max-width: calc(100dvw - 30px);">

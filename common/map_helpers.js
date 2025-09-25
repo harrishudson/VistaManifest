@@ -60,6 +60,26 @@ export const tile_providers =
    attrib: '&copy; OpenStreetMap CARTO'}
  ];
 
+// Svg css scaler
+export function fitSvgContainerToViewport(el, bbox, viewport = 
+  { minLon: 0, maxLon: 360, maxLat: 90, minLat: -90 }) {
+  if (!el || !bbox) return;
+
+  const targetWidthDeg  = viewport.maxLon - viewport.minLon;
+  const targetHeightDeg = viewport.maxLat - viewport.minLat;
+
+  const widthPct  = ((bbox.east - bbox.west) / targetWidthDeg) * 100;
+  const heightPct = ((bbox.north - bbox.south) / targetHeightDeg) * 100;
+  const leftPct   = ((bbox.west - viewport.minLon) / targetWidthDeg) * 100;
+  const topPct    = ((viewport.maxLat - bbox.north) / targetHeightDeg) * 100;
+
+  el.style.position = 'absolute';
+  el.style.left     = `${leftPct}%`;
+  el.style.top      = `${topPct}%`;
+  el.style.width    = `${widthPct}%`;
+  el.style.height   = `${heightPct}%`;
+  el.style.transformOrigin = 'top left';
+}
 
 // Date processing Helpers
 // -----------------------

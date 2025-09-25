@@ -8,7 +8,8 @@ import { CFUtils, CFRender }
  from '../../common/CFRender.js'
 import { TDSCatalogParser, TDSMetadataParser } 
  from '../../common/THREDDS_utils.js'
-import { createColorLegendImg, tile_providers, 
+
+import { createColorLegendImg, tile_providers, fitSvgContainerToViewport, 
          pad, getFirstDayOfMonth, getLastDayOfMonth,
          extractYearAndMonth, getOneMonthPrior, formatDateToYYYYMMDD } 
  from '../../common/map_helpers.js'
@@ -274,6 +275,10 @@ async function render_image() {
  let container = document.getElementById('img')
  remove_overlay()
  container.appendChild(img1)
+ let bbox = CFR.getXYbbox().bbox
+ let bounds = {"east": bbox[1][0], "west": bbox[0][0], 
+               "north": bbox[1][1], "south": bbox[0][1]} 
+ fitSvgContainerToViewport(container, bounds)
 
  gNETCDF_PROJECTION_CACHE = CFR.projectionCache
  

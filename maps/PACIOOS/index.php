@@ -16,6 +16,7 @@
      <li><a href="PACIOOS_1km_global_bathymetry.php">DEM Global 1km Bathymetry (Sea)</a></li>
      <li><a href="PACIOOS_nearest_coastline_land.php">Nearest Coastline (Land)</a></li>
      <li><a href="PACIOOS_nearest_coastline_sea.php">Nearest Coastline (Sea)</a></li>
+     <li><a href="PACIOOS_wave_model_forecast.php">WaveWatch III Global Wave Model - Timeseries</a></li>
     </ul>
    </li>
   </ul>

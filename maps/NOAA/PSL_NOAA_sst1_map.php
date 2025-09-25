@@ -31,6 +31,8 @@ const gMAP_METADATA = {
  "variable": "sst",
  "author_comment": 
   "Select a day to display Sea Surface Temperature.",
+ "map_attribution":
+  "Data NOAA NCEI",
  "related_links": 
   [{"label":"THREDDS Endpoint",
     "href":"https://psl.noaa.gov/thredds/catalog/Datasets/noaa.oisst.v2.highres/catalog.html"}],
