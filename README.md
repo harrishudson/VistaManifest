@@ -9,8 +9,10 @@ An Open Source website with small collection of NetCDF browser based visualizati
 ## Related Repo
 [CFRender](https://github.com/harrishudson/CFRender)
 
-## Server Requirements
-If you would like to deploy this site on your own servers, then your servers will need to support **php** files.
+## Web Server Requirements
+If you would like to deploy this site on your own servers, then your web server should support the following;
+- Able to serve **php** files
+- Serve content over **https** (secure connection).  *This may require certificate configuration on your web server.*
 
 ## Deployment Instructions
 - Copy files from this repo to a directory your web server

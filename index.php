@@ -4,8 +4,18 @@
 ?>
 
 <script nonce="<?php echo $nonce;?>">
-if (location.protocol == 'http:')
- location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+function upgrade_connection() {
+ if (location.protocol == 'http:') {
+  status_msg('Insecure page load detected (http). \n'+
+             'Reloading as secure (https) in 10 seconds.')
+  window.setTimeout(
+   function() {
+    location.href = 'https:' + 
+                     window.location.href.substring(window.location.protocol.length)
+  }, 10000)
+ }
+}
+window.onload = upgrade_connection
 </script>
 
 <div class="indent">
