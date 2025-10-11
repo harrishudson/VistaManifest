@@ -22,7 +22,7 @@
  inclusion on this website, ideally it should be;
  <ol>
   <li>A visualization for educational purposes</li>
-  <li>Open Data - that can be accessed without requring any user authentication nor API key registration</li>
+  <li>Open Data - that can be accessed without requiring any user authentication nor API key registration</li>
   <li>Available in NetCDF version 3 format (currently CFRender only supports this version)</li>
   <li>Available in CF (Climate Forecasting) convention</li>
   <li>If the dataset is more than 1Mb in size, or your have multiple NetCDF files that make up
@@ -37,11 +37,11 @@
  <h4>The CFRender Repo</h4>
  This is the main rendering engine used in this website.  If you are technically minded - feel free
  to suggest an improvement or raise an issue if you find a bug.<br/><br/>
- <a href="https://github.com/harrishudson/CFRender">https://github.com/harrishudson/CFRrender</a>
+ <a href="https://github.com/harrishudson/CFRender">https://github.com/harrishudson/CFRender</a>
  
  <h4>Donate / Sponsor</h4>
  <p>
- Did you find a visualization on the webiste useful to you?  Want to help keep this site
+ Did you find a visualization on the website useful to you?  Want to help keep this site
  up and running?
  </p>
  <a href="https://harrishudson.com/#sponsor">https://harrishudson.com/#sponsor</a>
