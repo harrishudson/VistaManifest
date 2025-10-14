@@ -717,46 +717,48 @@ window.onload = map_startup
  </div>
 
  <dialog id="map_info_dialog" class="map_dialog">
+  <h3>Information</h3>
+  <h4>Map Layer Legend</h4>
   <p>
-   <h3>Information</h3>
+   <img alt="Legend" id="info_legend" class="information" 
+   src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
   </p>
+  <h4>Map Arrow Legend</h4>
   <p>
-    <h4>Map Layer Legend</h4>
-    <img alt="Legend" id="info_legend" class="information" src="">
-    <h4>Map Arrow Legend</h4>
-    <img alt="Legend" id="arrow_legend" class="information" src="">
+   <img alt="Legend" id="arrow_legend" class="information" 
+    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
   </p>
+  <h4>Map Instructions</h4>
   <p>
-   <h4>Map Instructions</h4>
-    <span id="info_author_comment" class="information"></span>
+   <span id="info_author_comment" class="information"></span>
   </p>
-  </p>
-   <h4>Possible dataset date/time ranges</h4>
-    <span id="info_dataset_dates" class="information"></span>
-  </p>
+  <h4>Possible dataset date/time ranges</h4>
   <p>
-   <h4>Related Links</h4>
-    <span id="info_related_links" class="information"></span>
+   <span id="info_dataset_dates" class="information"></span>
   </p>
+  <h4>Related Links</h4>
   <p>
-    <h4>Dataset Global Attributes</h4>
-    <span id="info_global_attributes" class="information"></span>
+   <span id="info_related_links" class="information"></span>
   </p>
+  <h4>Dataset Global Attributes</h4>
   <p>
-   <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
-    <span id="info_variable_attributes" class="information"></span>
+   <span id="info_global_attributes" class="information"></span>
+  </p>
+  <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
+  <p>
+   <span id="info_variable_attributes" class="information"></span>
   </p>
   <button id="map_info_dialog_close" title="Close">Close</button>
  </dialog>
  <dialog id="map_settings_dialog" class="map_dialog">
+  <h3>Settings</h3>
+  <h4>Layer Opacity</h4>
   <p>
-   <h3>Settings</h3>
-  </p>
-  <p><h4>Layer Opacity</h4>
    <input type="range" min="20" max="100" id="opacity_range">
    <span id="opacity_range_label"></span>
   </p>
-  <p><h4>Base Layer</h4>
+  <h4>Base Layer</h4>
+  <p>
    <select id="base_layer_selector"></select>
   </p>
   <button id="map_settings_dialog_close" title="Close">Close</button>

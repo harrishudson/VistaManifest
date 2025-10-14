@@ -570,39 +570,38 @@ window.onload = map_startup
  </div>
 
  <dialog id="map_info_dialog" class="map_dialog">
+  <h3>Information</h3>
+  <h4>Map Instructions</h4>
   <p>
-   <h3>Information</h3>
+   <span id="info_author_comment" class="information"></span>
   </p>
+  <h4>Related Links</h4>
   <p>
-   <h4>Map Instructions</h4>
-    <span id="info_author_comment" class="information"></span>
+   <span id="info_related_links" class="information"></span>
   </p>
+  <h4>Dataset Global Attributes</h4>
   <p>
-   <h4>Related Links</h4>
-    <span id="info_related_links" class="information"></span>
+   <span id="info_global_attributes" class="information"></span>
   </p>
+  <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
   <p>
-    <h4>Dataset Global Attributes</h4>
-    <span id="info_global_attributes" class="information"></span>
-  </p>
-  <p>
-   <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
-    <span id="info_variable_attributes" class="information"></span>
+   <span id="info_variable_attributes" class="information"></span>
   </p>
   <button id="map_info_dialog_close" title="Close">Close</button>
  </dialog>
  <dialog id="map_settings_dialog" class="map_dialog">
+  <h3>Settings</h3>
+  <h4>Layer Color</h4>
   <p>
-   <h3>Settings</h3>
-  </p>
-  <p><h4>Layer Color</h4>
    <input type="color" id="layer_color" value="#8B3C66">
   </p>
-  <p><h4>Layer Opacity</h4>
+  <h4>Layer Opacity</h4>
+  <p>
    <input type="range" min="20" max="100" id="opacity_range">
    <span id="opacity_range_label"></span>
   </p>
-  <p><h4>Base Layer</h4>
+  <h4>Base Layer</h4>
+  <p>
    <select id="base_layer_selector"></select>
   </p>
   <button id="map_settings_dialog_close" title="Close">Close</button>

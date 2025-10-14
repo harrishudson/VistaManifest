@@ -4,12 +4,9 @@
 ?>
 
 <div class="indent">
- <p>
-  <h4>University Corporation for Atmospheric Research (UCAR)</h4>
- </p>
+ <h4>University Corporation for Atmospheric Research (UCAR)</h4>
  <p>Visualizations based on datasets from this provider.</p>
- <p>
-  <h4>Map Visualizations</h4>
+ <h4>Map Visualizations</h4>
  <ul>
   <li>National Digital Forecast Database (NDFD)
    <ul>
@@ -41,22 +38,22 @@
   </ul>
   </li>
  </ul>
- <p>
+
  <h4>About this provider</h4>
   <dl>
    <dt>Home page</dt>
    <dd>
-    <a href="https://ucar.edu/">https://ucar.edu/</a><br/>
+    <a href="https://ucar.edu/">https://ucar.edu/</a><br>
    </dd>
    <dt>Server endpoint used for these Visualizations</dt>
    <dd>
-    <a href="https://thredds.ucar.edu/thredds/catalog/catalog.html">THREDDS Server</a><br/>
-    <a href="https://thredds.ucar.edu/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br/>
-    <a href="https://www.unidata.ucar.edu/data/guidelines-data-use">Guidelines for Data Use</a><br/>
-    <a href="https://www.unidata.ucar.edu/">Server website</a><br/>
+    <a href="https://thredds.ucar.edu/thredds/catalog/catalog.html">THREDDS Server</a><br>
+    <a href="https://thredds.ucar.edu/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br>
+    <a href="https://www.unidata.ucar.edu/data/guidelines-data-use">Guidelines for Data Use</a><br>
+    <a href="https://www.unidata.ucar.edu/">Server website</a><br>
    </dd>
   </dl>
- </p>
+
 </div>
 
 <?php page_bottom(true); ?>

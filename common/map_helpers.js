@@ -121,8 +121,7 @@ export function formatDateToYYYYMMDD(date) {
  return `${year}-${month}-${day}`
 }
 
-// Empty Image DataURI
-// -------------------
-export const empty_image = 'data:image/png;base64,' +
-                           'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wQAAwAB/iuqfQAAAABJRU5ErkJggg=='
-
+/* Empty (transparent) 1x1 pixel image DataURI used for various temporary placeholders */
+/* ----------------------------------------------------------------------------------- */
+export const empty_image = 
+ "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="

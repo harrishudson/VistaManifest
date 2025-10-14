@@ -4,7 +4,6 @@
 ?>
 
 <div class="indent">
- <p>
  <h4>Privacy Policy</h4>
  <ul>
   <li>Only standard web logging information will be recorded about your visit to this website.  
@@ -22,7 +21,6 @@
       visualizations derived from such upstream datasets.
  </ul>
  Should any of this Privacy Policy change, the updates will be made available on this web page.
- </p>
 </div>
 
 <?php page_bottom(true); ?>

@@ -22,7 +22,6 @@ window.onload = upgrade_connection
  <p class="smallscreen_only">
   <em>Visualizations of Climate Forecasting Open Data</em>
  </p>
- <p>
  <h4>Demonstration Maps by dataset Providers</h4>
  <ul>
   <li>USA
@@ -41,17 +40,15 @@ window.onload = upgrade_connection
    </ul>
   </li>
  </ul>
- </p>
- <p>
-  <h4>More</h4>
-  <ul>
-   <li><a href="about.php">About &amp; Technical Information</a></li>
-   <li><a href="help.php">Help</a></li>
-   <li><a href="privacy.php">Privacy Policy</a></li>
-   <li><a href="get_involved.php">Get Involved</a></li>
-   <li><a href="contact.php">Contact Us</a></li>
-  </ul>
- </p>
+
+ <h4>More</h4>
+ <ul>
+  <li><a href="about.php">About &amp; Technical Information</a></li>
+  <li><a href="help.php">Help</a></li>
+  <li><a href="privacy.php">Privacy Policy</a></li>
+  <li><a href="get_involved.php">Get Involved</a></li>
+  <li><a href="contact.php">Contact Us</a></li>
+ </ul>
 
 </div>
 

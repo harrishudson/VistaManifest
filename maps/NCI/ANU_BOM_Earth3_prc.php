@@ -380,8 +380,7 @@ function handle_imagery(e) {
   if (!gOVERLAY) {
    let bounds = gRENDER_BOUNDS
    let imageBounds = [[ bounds[0][1], bounds[0][0] % 360  ], [ bounds[1][1], bounds[1][0] % 360 ]]
-   gOVERLAY = L.imageOverlay(empty_image, imageBounds) 
-   update_layer_opacity()
+   gOVERLAY = L.imageOverlay(empty_image, imageBounds, {opacity: 0}) 
    gOVERLAY.addTo(map)
   }
   return
@@ -423,7 +422,7 @@ function shuffle_images() {
 function set_overlay_image(img_rec) {
  let key1 = `image_${img_rec.timeVariable}_${img_rec.timeValue}`
  getData(dbNAME, dbSTORE, key1).then(
-  (img) => { if (gOVERLAY) gOVERLAY.setUrl(img) })
+  (img) => { if (gOVERLAY) { gOVERLAY.setUrl(img); update_layer_opacity(); } })
 }
 
 function remove_overlay(no_reset) {
@@ -681,7 +680,7 @@ window.onload = map_startup
  <div id="map" style="overflow:hidden; width:100%; height:100%;"> 
   <div class="map_headings">
    <span id="map_title" class="map_title"></span><br>
-   <input id="chosen_day" type="date"/><br>
+   <input id="chosen_day" type="date"><br>
    <span id="map_info" class="map_info"></span><br>
    <progress id="map_progress" class="map_progress"></progress>
   </div>
@@ -694,44 +693,43 @@ window.onload = map_startup
  </div>
 
  <dialog id="map_info_dialog" class="map_dialog">
+  <h3>Information</h3>
+  <h4>Map Legend</h4>
   <p>
-   <h3>Information</h3>
+    <img alt="Legend" id="info_legend" class="information" 
+    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
   </p>
+  <h4>Map Instructions</h4>
   <p>
-    <h4>Map Legend</h4>
-    <img alt="Legend" id="info_legend" class="information" src="">
-  </p>
-  <p>
-   <h4>Map Instructions</h4>
     <span id="info_author_comment" class="information"></span>
   </p>
-  </p>
-   <h4>Possible dataset date/time ranges</h4>
-    <span id="info_dataset_dates" class="information"></span>
-  </p>
+  <h4>Possible dataset date/time ranges</h4>
   <p>
-   <h4>Related Links</h4>
-    <span id="info_related_links" class="information"></span>
+   <span id="info_dataset_dates" class="information"></span>
   </p>
+  <h4>Related Links</h4>
   <p>
-    <h4>Dataset Global Attributes</h4>
-    <span id="info_global_attributes" class="information"></span>
+   <span id="info_related_links" class="information"></span>
   </p>
+  <h4>Dataset Global Attributes</h4>
   <p>
-   <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
-    <span id="info_variable_attributes" class="information"></span>
+   <span id="info_global_attributes" class="information"></span>
+  </p>
+  <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
+  <p>
+   <span id="info_variable_attributes" class="information"></span>
   </p>
   <button id="map_info_dialog_close" title="Close">Close</button>
  </dialog>
  <dialog id="map_settings_dialog" class="map_dialog">
+  <h3>Settings</h3>
+  <h4>Layer Opacity</h4>
   <p>
-   <h3>Settings</h3>
-  </p>
-  <p><h4>Layer Opacity</h4>
    <input type="range" min="20" max="100" id="opacity_range">
    <span id="opacity_range_label"></span>
   </p>
-  <p><h4>Base Layer</h4>
+  <h4>Base Layer</h4>
+  <p>
    <select id="base_layer_selector"></select>
   </p>
   <button id="map_settings_dialog_close" title="Close">Close</button>

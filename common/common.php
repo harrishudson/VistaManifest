@@ -42,7 +42,7 @@ function page_top($title, $scale = null) {
    crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-   crossorigin=""/>
+   crossorigin="">
   <script nonce="{$nonce}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
    crossorigin=""></script>
@@ -85,7 +85,7 @@ function page_bottom($show_home = false) {
   <ul id="status_queue" class="status"></ul>
   <div class="page_throbber">
    <div id="throbber" class="throbber" style="visibility:hidden;"><i class="fa fa-circle-o-notch spin"></i></div>
-   <progress id="page_progress" value="0" max="0" style="visibility:hidden;"></progress> 
+   <progress id="page_progress" value="0" max="24" style="visibility:hidden;"></progress> 
    <div id="page_progress_text" class="progress_text"></div>
   </div>
 

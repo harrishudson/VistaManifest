@@ -5,12 +5,9 @@
 
 <div class="indent">
 
- <p>
-  <h4>Oak Ridge National Laboratory (ORNL)</h4>
- </p>
+ <h4>Oak Ridge National Laboratory (ORNL)</h4>
  <p>Visualizations based on datasets from this provider.</p>
- <p>
-  <h4>Map Visualizations</h4>
+ <h4>Map Visualizations</h4>
  <ul>
   <li>ORNL DAAC Data
    <ul>
@@ -24,21 +21,20 @@
    </ul>
   </li>
  </ul>
- <p>
+
  <h4>About this provider</h4>
-  <dl>
-   <dt>Home page</dt>
-   <dd>
-    <a href="https://www.ornl.gov/">https://www.ornl.gov/</a><br/>
-   </dd>
-   <dt>Server endpoint used for these Visualizations</dt>
-   <dd>
-    <a href="https://thredds.daac.ornl.gov/thredds/catalog.html">THREDDS Server</a><br/>
-    <a href="https://daac.ornl.gov/">Server website</a><br/>
-    <a href="https://thredds.daac.ornl.gov/thredds/serverInfo.html">THREDDS Server Info Page</a><br/>
-   </dd>
-  </dl>
- </p>
+ <dl>
+  <dt>Home page</dt>
+  <dd>
+   <a href="https://www.ornl.gov/">https://www.ornl.gov/</a><br>
+  </dd>
+  <dt>Server endpoint used for these Visualizations</dt>
+  <dd>
+   <a href="https://thredds.daac.ornl.gov/thredds/catalog.html">THREDDS Server</a><br>
+   <a href="https://daac.ornl.gov/">Server website</a><br>
+   <a href="https://thredds.daac.ornl.gov/thredds/serverInfo.html">THREDDS Server Info Page</a><br>
+  </dd>
+ </dl>
 
 </div>
 

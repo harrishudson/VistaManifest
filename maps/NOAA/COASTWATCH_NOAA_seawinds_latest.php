@@ -477,21 +477,20 @@ window.onload = page_startup
 
 <div class="indent">
  <h4>NOAA Coastwatch Global 10 km Blended Daily Seawinds - Latest </h4>
- <p>
-  <dl>
-   <dt>Controls</dt>
-   <dd>
-    <button id="button_info" title="Information"><i class="fa fa-info-circle"></i></button>
-    <button id="button_settings" title="Settings"><i class="fa fa-cog"></i></button><br>
-   </dd>
-  </dl>
- </p>
+ <dl>
+  <dt>Controls</dt>
+  <dd>
+   <button id="button_info" title="Information"><i class="fa fa-info-circle"></i></button>
+   <button id="button_settings" title="Settings"><i class="fa fa-cog"></i></button><br>
+  </dd>
+ </dl>
 
  <p>
   <div id="container" 
    style="position:relative; width:calc(100dvw - 40px); max-width:840px; aspect-ratio:2/1; padding: 0px">
    <img src="<?php echo(get_root()); ?>/common/Mollweide.png" 
-    style="width:100%; height:100%; position:absolute; top:0px; left:0px; opacity:0.7; padding: 0px;"/>
+    alt="Mollweide Background"
+    style="width:100%; height:100%; position:absolute; top:0px; left:0px; opacity:0.7; padding: 0px;">
    <svg id="img" 
     style="width:100%; height:100%; position:absolute; top:0px; left:0px; padding: 0px;">
    </svg>
@@ -501,46 +500,48 @@ window.onload = page_startup
   </div>
  <p>
 
- <p>
-  <dl>
-   <dt>Layer Map Legend</dt>
-   <dd><img id="layer_legend" style="max-width: calc(100dvw - 30px);"></dd>
-   <dt>Arrow Map Legend</dt>
-   <dd><img id="arrow_legend" style="max-width: calc(100dvw - 30px);"></dd>
-  </dl>
- </p>
+ <dl>
+  <dt>Layer Map Legend</dt>
+  <dd><img id="layer_legend" style="max-width: calc(100dvw - 30px);"
+      alt="Legend"
+      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+  </dd>
+  <dt>Arrow Map Legend</dt>
+  <dd><img id="arrow_legend" style="max-width: calc(100dvw - 30px);"
+      alt="Arrow Legend"
+      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+  </dd>
+ </dl>
  
  <dialog id="info_dialog" class="map_dialog">
+  <h3>Information</h3>
+  <h4>Map Instructions</h4>
   <p>
-   <h3>Information</h3>
+   <span id="info_author_comment" class="information"></span>
   </p>
-   <h4>Map Instructions</h4>
-    <span id="info_author_comment" class="information"></span>
-  </p>
-  </p>
-   <h4>Possible dataset date/time ranges</h4>
-    <span id="info_dataset_dates" class="information"></span>
-  </p>
+  <h4>Possible dataset date/time ranges</h4>
   <p>
-   <h4>Related Links</h4>
-    <span id="info_related_links" class="information"></span>
+   <span id="info_dataset_dates" class="information"></span>
   </p>
+  <h4>Related Links</h4>
   <p>
-    <h4>Dataset Global Attributes</h4>
-    <span id="info_global_attributes" class="information"></span>
+   <span id="info_related_links" class="information"></span>
   </p>
+  <h4>Dataset Global Attributes</h4>
   <p>
-   <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
-    <span id="info_variable_attributes" class="information"></span>
+   <span id="info_global_attributes" class="information"></span>
+  </p>
+  <h4>Dataset Variable Attributes (<span id="info_variable" class="information"></span>)</h4>
+  <p>
+   <span id="info_variable_attributes" class="information"></span>
   </p>
   <button id="info_dialog_close" title="Close">Close</button>
  </dialog>
 
  <dialog id="settings_dialog" class="map_dialog">
+  <h3>Settings</h3>
+  <h4>Layer Opacity</h4>
   <p>
-   <h3>Settings</h3>
-  </p>
-  <p><h4>Layer Opacity</h4>
    <input type="range" min="20" max="100" id="opacity_range">
    <span id="opacity_range_label"></span>
   </p>

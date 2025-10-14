@@ -7,8 +7,7 @@
  <p>
   <h4>Australian Bureau of Meteorology</h4>
   <p>Visualizations based on datasets from this provider.</p>
-  <p>
-   <h4>Map Visualizations</h4>
+  <h4>Map Visualizations</h4>
   <ul>
    <li>Australian Gridded Climate Data (AGCD)
     <ul>
@@ -30,18 +29,16 @@
    </li>
   </ul>
 
-  <p>
-   <h4>About this provider</h4>
-   <dl>
-    <dt>Home page</dt>
-    <dd><a href="http://bom.gov.au">http://bom.gov.au</a></dd>
-    <dt>Server endpoints used for these Visualizations</dt>
-    <dd>
-     <a href="http://opendap.bom.gov.au/thredds/catalog.html">THREDDS Server</a><br/>
-     <a href="http://opendap.bom.gov.au/thredds/serverInfo.html">THREDDS Server Info Page</a><br/>
-    </dd>
-   </dl>
-  </p>
+  <h4>About this provider</h4>
+  <dl>
+   <dt>Home page</dt>
+   <dd><a href="http://bom.gov.au">http://bom.gov.au</a></dd>
+   <dt>Server endpoints used for these Visualizations</dt>
+   <dd>
+    <a href="http://opendap.bom.gov.au/thredds/catalog.html">THREDDS Server</a><br>
+    <a href="http://opendap.bom.gov.au/thredds/serverInfo.html">THREDDS Server Info Page</a><br>
+   </dd>
+  </dl>
 
 </div>
 

@@ -4,9 +4,7 @@
 ?>
 
 <div class="indent">
- <p>
  <h4>Help - Map Visualisations</h4>
- <p>
  <dl>
   <dt><button><i class="fa fa-plus"></i></button></dt>
   <dd>Zoom-In.  Map Zoom-In</dd>
@@ -34,7 +32,6 @@
   <dd>Click or Tap on map to reveal cell value information, and any data filter dimensions, 
       for a given map location.</dd>
  </dl>
- </p>
 </div>
 
 <?php page_bottom(true); ?>

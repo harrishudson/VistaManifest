@@ -4,9 +4,8 @@
 ?>
 
 <div class="indent">
- <p>
  <h4>About Vista Manifest &amp; Technical Information</h4>
- </p>
+
  <p>
   <span style="background-color:#DADAFE;padding:3px">
   <em>
@@ -15,6 +14,8 @@
   </em>
   </span>
  </p>
+
+ <p>
   Scientific Weather and Climate data has generally been available on the web as Open Datasets for some time now.
   Such data is often in a technical file format called <em>NetCDF</em> and in a certain convention referred to as 
   <em>CF Convention</em>.  Weather and Climate Forecasting websites that publish NetCDF CF datasets, whilst very 
@@ -31,10 +32,11 @@
   please see the <a href="get_involved.php">Get Involved</a> page.
  </p>
 
+ <h4>Attention Publishers, Custodians, and Server Admin's of datasets</h4>
  <p>
-  <h4>Attention Publishers, Custodians, and Server Admin's of datasets</h4>
   <em>Did you get to this page because of a "User Agent" message in your logs about missing CORS headers?  Then please read this.</em>
  </p>
+
  <p>
   If your datasets are truly Open Data - then ideally you are serving your NetCDF files over <em>https</em> with 
   <em>CORS </em>
@@ -51,14 +53,14 @@
   inform us on the <a href="contact.php">Contact Us</a> page so we can remove our proxy relaying your data.
  </p>
 
- <p>
  <h4>Acknowledgement</h4>
+ <p>
   Vista Manifest utilizes; Leaflet and Font Awesome libraries.  And is built using the CFRender library
   (which is dependent upon on NetCDFjs) and along with; HTML5, javascript and php.
  </p>
 
- <p>
  <h4>Publish Date - <em>Epoch</em></h4>
+ <p>
   Vista Manifest website was first published in <em>December 2024</em>.  This website content, links to third party 
   resources, demonstration examples using modern javascript, and third party upstream dataset providers, was all valid 
   at the time of deployment.  There may have been subsequent example updates or changes to upstream dataset providers.

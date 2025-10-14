@@ -7,8 +7,7 @@
  <p>
   <h4>Australian National Computing Infrastructure (NCI)</h4>
   <p>Visualizations based on datasets from this provider.</p>
-  <p>
-   <h4>Map Visualizations</h4>
+  <h4>Map Visualizations</h4>
   <ul>
    <li>Bureau of Meteorology Atmospheric Regional Projections for Australia (BARPA)
     <ul>
@@ -46,19 +45,17 @@
    </li>
   </ul>
 
-  <p>
-   <h4>About this provider</h4>
-   <dl>
-    <dt>Home page</dt>
-    <dd><a href="https://nci.org.au">nci.org.au</a></dd>
-    <dt>Server endpoints used for these Visualizations</dt>
-    <dd>
-     <a href="https://thredds.nci.org.au/thredds/catalog/catalog.html">THREDDS Server</a><br/>
-     <a href="https://thredds.nci.org.au/thredds/fileServer/thredds-readme/thredds_readme.txt">THREDDS Server README</a><br/>
-     <a href="https://thredds.nci.org.au/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br/>
-    </dd>
-   </dl>
-  </p>
+  <h4>About this provider</h4>
+  <dl>
+   <dt>Home page</dt>
+   <dd><a href="https://nci.org.au">nci.org.au</a></dd>
+   <dt>Server endpoints used for these Visualizations</dt>
+   <dd>
+    <a href="https://thredds.nci.org.au/thredds/catalog/catalog.html">THREDDS Server</a><br>
+    <a href="https://thredds.nci.org.au/thredds/fileServer/thredds-readme/thredds_readme.txt">THREDDS Server README</a><br>
+    <a href="https://thredds.nci.org.au/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br>
+   </dd>
+  </dl>
 
 </div>
 

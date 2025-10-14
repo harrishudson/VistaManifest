@@ -4,12 +4,9 @@
 ?>
 
 <div class="indent">
- <p>
-  <h4>Hybrid Coordinate Ocean Model (HYCOM)</h4>
- </p>
+ <h4>Hybrid Coordinate Ocean Model (HYCOM)</h4>
  <p>Visualizations based on datasets from this provider.</p>
- <p>
-  <h4>Map Visualizations</h4>
+ <h4>Map Visualizations</h4>
  <ul>
   <li>ESPC-D-V02: Global 1/12° Analysis
    <ul>
@@ -22,17 +19,17 @@
    </ul>
   </li>
  </ul>
- <p>
+
  <h4>About this provider</h4>
-  <dl>
-   <dt>HYCOM</dt>
-   <dd>
-    <a href="https://hycom.org">Home Page (hycom.org)</a><br/>
-    <a href="https://tds.hycom.org/thredds/catalog.html">THREDDS Server</a><br/>
-    <a href="https://tds.hycom.org/thredds/serverInfo.html">THREDDS Server Info Page</a><br/>
-   </dd>
-  </dl>
- </p>
+ <dl>
+  <dt>HYCOM</dt>
+  <dd>
+   <a href="https://hycom.org">Home Page (hycom.org)</a><br>
+   <a href="https://tds.hycom.org/thredds/catalog.html">THREDDS Server</a><br>
+   <a href="https://tds.hycom.org/thredds/serverInfo.html">THREDDS Server Info Page</a><br>
+  </dd>
+ </dl>
+
 </div>
 
 <?php page_bottom(true); ?>
