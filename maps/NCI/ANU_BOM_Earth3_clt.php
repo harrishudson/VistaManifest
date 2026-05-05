@@ -20,9 +20,9 @@ import { cloud_cover_percentage_stops }
 
 // Primary Map metadata
 const gMAP_METADATA = {
- "latest_endpoint": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/catalog.xml",
+ "latest_endpoint": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output-CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/catalog.xml",
  "subsetting_endpoint_prefix": 
-  "https://thredds.nci.org.au/thredds/ncss/grid/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/",
+  "https://thredds.nci.org.au/thredds/ncss/grid/py18/BARPA/output-CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/",
  "subsetting_query_string_suffix": 
   "&addLatLon=true&accept=netcdf&format=netcdf3",
  "variable": 'clt',
@@ -34,7 +34,7 @@ const gMAP_METADATA = {
   "clt_AUS-15_EC-Earth3_ssp585_r1i1p1f1_BOM_BARPA-R_v1-r1_1hr_",
  "related_links": 
   [{"label": "THREDDS Endpoint",
-    "href": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output/CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/catalog.html"}],
+    "href": "https://thredds.nci.org.au/thredds/catalog/py18/BARPA/output-CMIP6/DD/AUS-15/BOM/EC-Earth3/ssp585/r1i1p1f1/BARPA-R/v1-r1/1hr/clt/latest/catalog.html"}],
  "map_attribution": 'Data &copy; ANU',
  "map_type": 'grid',
  "layer_starting_opacity": 0.4,

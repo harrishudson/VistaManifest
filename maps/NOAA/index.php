@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('National Oceanic and Atmospheric Administration (NOAA)','yes');
+ $nonce = page_top('National Oceanic and Atmospheric Administration (NOAA) - Vista Manifest','yes');
 ?>
 
 <div class="indent">
@@ -89,7 +89,7 @@
   <dd>
    <a href="https://www.ncei.noaa.gov/">Home Page (ncei.noaa.gov)</a><br>
    <a href="https://www.ncei.noaa.gov/thredds/catalog/catalog.html">THREDDS Server</a><br>
-   <a href="https://www.ncei.noaa.gov/thredds/serverInfo.html">THREDDS Server Info Page</a><br>
+   <a href="https://www.ncei.noaa.gov/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br>
   </dd>
  </dl>
 

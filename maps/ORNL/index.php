@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('Oak Ridge National Laboratory (ORNL)','yes');
+ $nonce = page_top('Oak Ridge National Laboratory (ORNL) - Vista Manifest','yes');
 ?>
 
 <div class="indent">

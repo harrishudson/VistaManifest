@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('University Corporation for Atmospheric Research (UCAR)','yes');
+ $nonce = page_top('University Corporation for Atmospheric Research (UCAR) - VIsta Manifest','yes');
 ?>
 
 <div class="indent">

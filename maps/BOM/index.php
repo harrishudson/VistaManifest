@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('Australian Bureau of Meteorology','yes');
+ $nonce = page_top('Australian Bureau of Meteorology - Vista Manifest','yes');
 ?>
 
 <div class="indent">
@@ -32,11 +32,11 @@
   <h4>About this provider</h4>
   <dl>
    <dt>Home page</dt>
-   <dd><a href="http://bom.gov.au">http://bom.gov.au</a></dd>
+   <dd><a href="https://bom.gov.au">bom.gov.au</a></dd>
    <dt>Server endpoints used for these Visualizations</dt>
    <dd>
     <a href="http://opendap.bom.gov.au/thredds/catalog.html">THREDDS Server</a><br>
-    <a href="http://opendap.bom.gov.au/thredds/serverInfo.html">THREDDS Server Info Page</a><br>
+    <a href="http://opendap.bom.gov.au/thredds/info/serverInfo.html">THREDDS Server Info Page</a><br>
    </dd>
   </dl>
 

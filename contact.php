@@ -19,7 +19,7 @@
    <dd><a href="https://harrishudson.com">harrishudson.com</a></dd>
   </dl>
  <p>
-  <span class="copy">Copyright &copy; Harris Hudson 2025</span>
+  <span class="copy">Copyright &copy; Harris Hudson 2026</span>
  </p>
 </div>
 

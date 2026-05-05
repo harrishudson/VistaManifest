@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('Pacific Islands Ocean Observing System','yes');
+ $nonce = page_top('Pacific Islands Ocean Observing System (PACIOOS) - Vista Manifest','yes');
 ?>
 
 <div class="indent">

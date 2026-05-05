@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('Australian National Computing Infrastructure','yes');
+ $nonce = page_top('Australian National Computing Infrastructure (NCI) - Vista Manifest','yes');
 ?>
 
 <div class="indent">

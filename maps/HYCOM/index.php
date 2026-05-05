@@ -1,6 +1,6 @@
 <?php
  require('../../common/common.php');
- $nonce = page_top('Hybrid Coordinate Ocean Model (HYCOM)','yes');
+ $nonce = page_top('Hybrid Coordinate Ocean Model (HYCOM) - Vista Manifest','yes');
 ?>
 
 <div class="indent">
