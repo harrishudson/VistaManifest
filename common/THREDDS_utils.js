@@ -6,7 +6,7 @@
  * 
  * This script has no external dependencies and is browser ready
  * 
- * Author: Copyright (c) 2025 Harris Hudson  harris@harrishudson.com 
+ * Author: Copyright (c) 2026 Harris Hudson  harris@harrishudson.com 
  **/
 
 export class TDSCatalogParser {

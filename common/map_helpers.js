@@ -1,4 +1,4 @@
-/* Copyright (c) Harris Hudson 2025 */
+/* Copyright (c) Harris Hudson 2026 */
 
 // Legend Image Creator
 // --------------------
@@ -31,34 +31,43 @@ export function createColorLegendImg(colorStops) {
 
 // Map Base Layers
 // ---------------
-
-export const tile_providers = 
- [
-  {title: 'OpenStreetMap', 
-   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
-   attrib: 'Tiles &copy; OpenStreetMap' },
-  {title: 'Esri.WorldStreetMap', 
-   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', 
-   attrib: 'Tiles &copy; Esri'},
-  {title: 'Esri.WorldTopoMap', 
-   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', 
-   attrib: 'Tiles &copy; Esri'},
-  {title: 'Esri.WorldImagery', 
-   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
-   attrib: 'Tiles &copy; Esri'},
-  {title: 'OSM', 
-   url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png', 
-   attrib: 'Tiles &copy; OpenStreetMap' },
-  {title: 'OpenTopoMap',
-   url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-   attrib: 'Tiles &copy; OpenStreetMap Style &copy; OpenTopoMap'},
-  {title: 'Stamen Terrain',
-   url: 'https://stamen-tiles-a.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png',
-   attrib: 'Tiles by Stamen Design'},
-  {title: 'CartoDB.Positron',
-   url: 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', 
-   attrib: '&copy; OpenStreetMap CARTO'}
- ];
+export const tile_providers = [
+  {
+    title: 'OpenStreetMap',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attrib: 'Tiles &copy; OpenStreetMap'
+  },
+  {
+    title: 'Esri.WorldStreetMap',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attrib: 'Tiles &copy; Esri'
+  },
+  {
+    title: 'Esri.WorldTopoMap',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    attrib: 'Tiles &copy; Esri'
+  },
+  {
+    title: 'Esri.WorldImagery',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attrib: 'Tiles &copy; Esri'
+  },
+  {
+    title: 'OSM',
+    url: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    attrib: 'Tiles &copy; OpenStreetMap'
+  },
+  {
+    title: 'OpenTopoMap',
+    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attrib: 'Tiles &copy; OpenStreetMap Style &copy; OpenTopoMap'
+  },
+  {
+    title: 'Esri.WorldGrayCanvas',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attrib: 'Tiles &copy; Esri'
+  }
+];
 
 // Svg css scaler
 export function fitSvgContainerToViewport(el, bbox, viewport = 

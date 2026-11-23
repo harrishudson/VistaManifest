@@ -1,4 +1,4 @@
-/* Copyright (c) Harris Hudson 2025 */
+/* Copyright (c) Harris Hudson 2026 */
 
 import { CFUtils } from './CFRender.js'
 
@@ -131,6 +131,21 @@ export const monthly_precipitation_totals_mm_stops = [
   {value: 800, color: "#ff4c9b", opacity: 1} 
  ]
 
+export const rain_rate_mmhr_stops = [
+  { value: 0, color: "#ffffff", opacity: 0.0 },     // Dry, fully transparent
+  { value: 0.1, color: "#d6f0fa", opacity: 0.3 },   // Trace / drizzle, pale blue
+  { value: 0.5, color: "#9fd8f2", opacity: 0.5 },   // Light drizzle, light blue
+  { value: 1, color: "#5bb8ec", opacity: 0.6 },     // Light rain, sky blue
+  { value: 2.5, color: "#2f86d9", opacity: 0.7 },   // Light to moderate rain, blue
+  { value: 5, color: "#1db36b", opacity: 0.75 },    // Moderate rain, green
+  { value: 10, color: "#c4e82a", opacity: 0.8 },    // Heavy rain, yellow-green
+  { value: 15, color: "#ffe100", opacity: 0.85 },   // Heavy rain, yellow
+  { value: 25, color: "#ff9a00", opacity: 0.9 },    // Very heavy rain, orange
+  { value: 40, color: "#f03a1f", opacity: 0.93 },   // Intense rain, red
+  { value: 60, color: "#a8002f", opacity: 0.96 },   // Extreme rain, crimson
+  { value: 100, color: "#d100d1", opacity: 1.0 }    // Exceptional rain, magenta
+ ]
+
 export const radar_reflectivity1_stops = [
   { value: 0, color: "#ffffff", opacity: 0.0 },   // No reflectivity, transparent
   { value: 5, color: "#d4f1f9", opacity: 0.25 },   // Very light, almost no precipitation, pale blue
@@ -145,6 +160,19 @@ export const radar_reflectivity1_stops = [
   { value: 55, color: "#d32f2f", opacity: 0.95 },  // Intense storm, red
   { value: 60, color: "#9b0000", opacity: 1.0 }   // Extreme, dark red/maroon
  ]
+
+export const solar_irradiance_wm2_stops = [
+  { value: 0,    color: "#1a237e", opacity: 0.0 },  // Night / zero irradiance, transparent
+  { value: 1,    color: "#3949ab", opacity: 0.35 }, // Dawn / dusk, deep indigo
+  { value: 100,  color: "#1e88e5", opacity: 0.5 },  // Low angle / heavy cloud, blue
+  { value: 250,  color: "#00acc1", opacity: 0.6 },  // Filtered light, cyan-teal
+  { value: 400,  color: "#7cb342", opacity: 0.7 },  // Moderate insolation, yellow-green
+  { value: 550,  color: "#fdd835", opacity: 0.8 },  // Bright sun, yellow
+  { value: 700,  color: "#fb8c00", opacity: 0.88 }, // Strong insolation, amber-orange
+  { value: 850,  color: "#f4511e", opacity: 0.94 }, // High irradiance, deep orange
+  { value: 1000, color: "#e53935", opacity: 1.0 },  // Peak solar, bright red
+  { value: 1200, color: "#880e4f", opacity: 1.0 }   // Extreme / clear-sky peak, dark crimson
+]
 
 export const sea_surface_temperature_celsius_stops = [
   { value: -2, color: "#2b83ba", opacity: 1 },    // Deep Blue for very cold, polar temperatures
@@ -183,13 +211,13 @@ export const elevation_meters_stops = [
 ];
 
 export const bathymetry_meters_stops =  [
-  { "value": 0, "color": "#fefefe" },     // sea level edge (white highlight)
-  { "value": -50, "color": "#ffb347" },   // shallow shelf (warm orange)
-  { "value": -200, "color": "#ff7733" },  // upper slope (red-orange)
-  { "value": -1000, "color": "#cc3366" }, // continental slope (magenta)
-  { "value": -3000, "color": "#662e9b" }, // deep purple
-  { "value": -6000, "color": "#2e1a47" }, // abyssal dark purple
-  { "value": -11000, "color": "#0d0d0d" } // trench (black)
+  { "value": 0, "color": "#fefefe", opacity: 1 },     // sea level edge (white highlight)
+  { "value": -50, "color": "#ffb347", opacity: 1 },   // shallow shelf (warm orange)
+  { "value": -200, "color": "#ff7733", opacity: 1 },  // upper slope (red-orange)
+  { "value": -1000, "color": "#cc3366", opacity: 1 }, // continental slope (magenta)
+  { "value": -3000, "color": "#662e9b", opacity: 1 }, // deep purple
+  { "value": -6000, "color": "#2e1a47", opacity: 1 }, // abyssal dark purple
+  { "value": -11000, "color": "#0d0d0d", opacity: 1 } // trench (black)
 ]
 
 export const shoreline_distance_stops = [
@@ -232,6 +260,21 @@ export const wind_magnitude_arrow_stops = [
   { value: 16, color: "#cc00ff" }, // Purple (very strong)
   { value: 21, color: "#ffffff" }  // White (extreme wind)
  ]
+
+// logarithmic chlorophyll-a stops (mg/m^3)
+export const ocean_chlorophyll_log_stops = [
+  { value: 0.01,   log10: -2.00, color: '#081d58', opacity: 0.45 }, // Very low / oligotrophic
+  { value: 0.03,   log10: -1.52, color: '#253494', opacity: 0.55 },
+  { value: 0.10,   log10: -1.00, color: '#225ea8', opacity: 0.65 },
+  { value: 0.30,   log10: -0.52, color: '#1d91c0', opacity: 0.75 },
+  { value: 1.00,   log10:  0.00, color: '#41b6c4', opacity: 0.82 },
+  { value: 1.511,  log10:  0.18, color: '#56bec0', opacity: 0.00 }, // Notch start before 1.512 land fill
+  { value: 1.512,  log10:  0.18, color: '#56bec0', opacity: 0.00 }, // Land fill sentinel value
+  { value: 1.513,  log10:  0.18, color: '#56bec0', opacity: 0.84 }, // Resume ocean opacity right above 1.512
+  { value: 3.00,   log10:  0.48, color: '#7fcdbb', opacity: 0.88 },
+  { value: 10.0,   log10:  1.00, color: '#c7e9b4', opacity: 0.92 },
+  { value: 30.0,   log10:  1.48, color: '#edf8b1', opacity: 0.95 }, // High / bloom
+];
 
 // Generic Wind Vector Styles
 

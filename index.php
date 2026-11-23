@@ -3,16 +3,76 @@
  $nonce = page_top('Vista Manifest - Home','yes');
 ?>
 
+<script nonce="<?php echo $nonce;?>" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://vistamanifest.com/#website",
+      "url": "https://vistamanifest.com/",
+      "name": "Vista Manifest",
+      "description": "Demonstration web application created by Harris Hudson.",
+      "author": {
+        "@id": "https://harrishudson.com/#harrishudson"
+      },
+      "creator": {
+        "@id": "https://harrishudson.com/#harrishudson"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://vistamanifest.com/#webpage",
+      "url": "https://vistamanifest.com/",
+      "name": "Vista Manifest",
+      "isPartOf": {
+        "@id": "https://vistamanifest.com/#website"
+      },
+      "author": {
+        "@id": "https://harrishudson.com/#harrishudson"
+      },
+      "about": {
+        "@id": "https://vistamanifest.com/#app"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://vistamanifest.com/#app",
+      "name": "Vista Manifest",
+      "url": "https://vistamanifest.com/",
+      "author": {
+        "@id": "https://harrishudson.com/#harrishudson"
+      },
+      "creator": {
+        "@id": "https://harrishudson.com/#harrishudson"
+      },
+      "isBasedOn": {
+        "@id": "https://harrishudson.com/#webpage"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://harrishudson.com/#harrishudson",
+      "name": "Harris Hudson",
+      "url": "https://harrishudson.com/",
+      "sameAs": [
+        "https://github.com/harrishudson"
+      ]
+    }
+  ]
+}
+</script>
+
 <script nonce="<?php echo $nonce;?>">
 function upgrade_connection() {
- if (location.protocol == 'http:') {
+ if (!window.isSecureContext) {
   status_msg('Insecure page load detected (http). \n'+
-             'Reloading as secure (https) in 10 seconds.')
+             'Reloading as secure (https) in 5 seconds.')
   window.setTimeout(
    function() {
     location.href = 'https:' + 
                      window.location.href.substring(window.location.protocol.length)
-  }, 10000)
+  }, 5000)
  }
 }
 window.onload = upgrade_connection
@@ -37,6 +97,16 @@ window.onload = upgrade_connection
    <ul>
     <li><a href="./maps/BOM/">Bureau of Meteorology (BOM)</a></li>
     <li><a href="./maps/NCI/">National Computing Infrastructure (NCI)</a></li>
+   </ul>
+  </li>
+  <li>France
+   <ul>
+    <li><a href="./maps/CLS/">COLLECTE LOCALISATION SATELLITES (CLS)</a></li>
+   </ul>
+  </li>
+  <li>Thailand
+   <ul>
+    <li><a href="./maps/ADPC/">Asian Disaster Preparedness Center (ADPC)</a></li>
    </ul>
   </li>
  </ul>

@@ -15,7 +15,7 @@
  * CFRender 
  * CFUtils
  *
- * Author: Copyright (c) 2025 Harris Hudson  harris@harrishudson.com 
+ * Author: Copyright (c) 2026 Harris Hudson  harris@harrishudson.com 
  *
  **/
 
@@ -1421,8 +1421,11 @@ var _CFUtils = {
 
  getTimeISOString: function(value, units) {
   try {
-   // Extract the numeric value and units from the time string
-   const [clock_units, , baseDateStr] = units.split(" ")
+   // Extract the numeric value and units from the time string.
+   // The base date may be followed by a separate time and time zone;
+   // for example 'hours since 2026-11-19 22:00:00.000000' or
+   // 'seconds since 1970-01-01 00:00:00 +10:00'
+   const [clock_units, , baseDateToken, baseTimeToken, baseZoneToken] = units.trim().split(/\s+/)
    // Convert the value to a floating-point number
    const numericValue = parseFloat(value)
    // Convert the numeric value to milliseconds based on the units
@@ -1441,7 +1444,22 @@ var _CFUtils = {
    } else {
     return value
    }
-   // Base date
+   // Base date.  Date only strings are parsed as UTC, but date/time strings 
+   // without a time zone are parsed as local time, so default to UTC (CF Conventions)
+   let baseDateStr = baseDateToken
+   if ((baseTimeToken) && (baseDateToken.indexOf('T') < 0))
+    baseDateStr = baseDateToken + 'T' + baseTimeToken
+   if (baseDateStr.indexOf('T') >= 0) {
+    // Milliseconds precision only
+    baseDateStr = baseDateStr.replace(/(\.\d{3})\d+/, '$1')
+    if (/[+-]\d{2}:?\d{2}$/.test(baseDateStr.slice(baseDateStr.indexOf('T')))) {
+     // Time zone already supplied
+    } else if (/[+-]\d{2}:?\d{2}$/.test(baseZoneToken || '')) {
+     baseDateStr += baseZoneToken
+    } else if (!/Z$/i.test(baseDateStr)) {
+     baseDateStr += 'Z'
+    }
+   }
    const baseDate = new Date(baseDateStr)
    // Calculate the final date by adding milliseconds to the base date
    const finalDate = new Date(baseDate.getTime() + milliseconds)
@@ -2024,6 +2042,90 @@ export class CFRender {
    return null
   }
 
+  /*
+   * Returns { X, Y, xIndex, yIndex, inside, residualDegrees } or null.
+   * Call after reading the NetCDF and before/after draw2DbasicGrid; the method
+   * only needs the coordinate variables and their 2-D dimension layout.
+   */
+  unprojectLatLon(lon, lat, options = {}) {
+    lon = Number(lon); lat = Number(lat);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat))
+      throw new Error('unprojectLatLon requires finite longitude and latitude.');
+    if (!this.is_projected_source)
+      return { X: this.WorldWrap(lon), Y: lat, xIndex: null, yIndex: null, inside: true, residualDegrees: 0 };
+  
+    const xName = this.varOrdinate?.X;
+    const yName = this.varOrdinate?.Y;
+    if (!xName || !yName) throw new Error('Projected NetCDF is missing auxiliary longitude/latitude coordinate variables.');
+    const xCoordHeader = this.netCDF.headers.variables.find(v => v.name === xName);
+    const yCoordHeader = this.netCDF.headers.variables.find(v => v.name === yName);
+    if (!xCoordHeader || !yCoordHeader || xCoordHeader.dimensions.length !== 2 || yCoordHeader.dimensions.length !== 2)
+      throw new Error('Auxiliary longitude/latitude coordinates must be two-dimensional arrays.');
+    const dims = xCoordHeader.dimensions;
+    if (dims[0] !== yCoordHeader.dimensions[0] || dims[1] !== yCoordHeader.dimensions[1])
+      throw new Error('Auxiliary longitude/latitude arrays do not share the same dimensions.');
+  
+    const xDimId = this.dimIndex[this.Axes.X], yDimId = this.dimIndex[this.Axes.Y];
+    const xPos = dims.indexOf(xDimId), yPos = dims.indexOf(yDimId);
+    if (xPos < 0 || yPos < 0 || xPos === yPos) throw new Error('Cannot match auxiliary coordinate dimensions to CFRender X/Y axes.');
+    const nx = this.netCDF.headers.dimensions[xDimId].size;
+    const ny = this.netCDF.headers.dimensions[yDimId].size;
+    const lonData = this.netCDF.getDataVariable(xName), latData = this.netCDF.getDataVariable(yName);
+    const indexOf = (ix, iy) => xPos > yPos ? iy * nx + ix : ix * ny + iy;
+    const xAxis = this.netCDF.getDataVariable(this.Axes.X);
+    const yAxis = this.netCDF.getDataVariable(this.Axes.Y);
+    const wrapDelta = d => ((d + 540) % 360) - 180;
+    const targetLon = lon;
+  
+    // Invert a bilinear geographic quad with Newton iterations. Corner order is
+    // p00=(x0,y0), p10=(x1,y0), p01=(x0,y1), p11=(x1,y1).
+    const solveQuad = (ix, iy) => {
+      const ids = [indexOf(ix,iy), indexOf(ix+1,iy), indexOf(ix,iy+1), indexOf(ix+1,iy+1)];
+      const L = ids.map(k => Number(lonData[k]));
+      const B = ids.map(k => Number(latData[k]));
+      if (![...L,...B].every(Number.isFinite)) return null;
+      const l0 = L[0];
+      const U = L.map(v => l0 + wrapDelta(v-l0));
+      const tx = l0 + wrapDelta(targetLon-l0), ty = lat;
+      let u = 0.5, v = 0.5;
+      for (let n=0; n<10; n++) {
+        const fx = U[0]*(1-u)*(1-v)+U[1]*u*(1-v)+U[2]*(1-u)*v+U[3]*u*v-tx;
+        const fy = B[0]*(1-u)*(1-v)+B[1]*u*(1-v)+B[2]*(1-u)*v+B[3]*u*v-ty;
+        const dxdu = (U[1]-U[0])*(1-v)+(U[3]-U[2])*v;
+        const dxdv = (U[2]-U[0])*(1-u)+(U[3]-U[1])*u;
+        const dydu = (B[1]-B[0])*(1-v)+(B[3]-B[2])*v;
+        const dydv = (B[2]-B[0])*(1-u)+(B[3]-B[1])*u;
+        const det = dxdu*dydv-dxdv*dydu;
+        if (Math.abs(det)<1e-14) return null;
+        const du = (fx*dydv-fy*dxdv)/det;
+        const dv = (fy*dxdu-fx*dydu)/det;
+        u -= du; v -= dv;
+        if (Math.abs(du)+Math.abs(dv)<1e-9) break;
+      }
+      const inside = u>=-1e-6 && u<=1+1e-6 && v>=-1e-6 && v<=1+1e-6;
+      if (!inside) return null;
+      const predLon = U[0]*(1-u)*(1-v)+U[1]*u*(1-v)+U[2]*(1-u)*v+U[3]*u*v;
+      const predLat = B[0]*(1-u)*(1-v)+B[1]*u*(1-v)+B[2]*(1-u)*v+B[3]*u*v;
+      const residual = Math.hypot(wrapDelta(predLon-targetLon)*Math.cos(lat*Math.PI/180), predLat-lat);
+      return { u, v, residual };
+    };
+  
+    let best = null;
+    const tolerance = Number.isFinite(options.toleranceDegrees) ? options.toleranceDegrees : 0.05;
+    for (let iy=0; iy<ny-1; iy++) for (let ix=0; ix<nx-1; ix++) {
+      const q = solveQuad(ix,iy);
+      if (!q || q.residual>tolerance) continue;
+      if (!best || q.residual<best.residual) best={...q,ix,iy};
+    }
+    if (!best) return null;
+    const X = Number(xAxis[best.ix])*(1-best.u)+Number(xAxis[best.ix+1])*best.u;
+    const Y = Number(yAxis[best.iy])*(1-best.v)+Number(yAxis[best.iy+1])*best.v;
+    return { X, Y, xIndex: best.ix+best.u, yIndex: best.iy+best.v, inside: true, residualDegrees: best.residual };
+  }
+  
+  // Optional alias if you prefer the more conventional projection terminology.
+  unProject(lon, lat, options = {}) { return this.unprojectLatLon(lon, lat, options); }
+  
   make2DDataGrid(DataVariable, DimensionFilter, XYprojectionFunction, meridianSkip) {
    if (this.is_projected_source)
     return this.make2DDataGridProjected(DataVariable, DimensionFilter, XYprojectionFunction, meridianSkip) 
