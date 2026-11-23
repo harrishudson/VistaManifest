@@ -317,6 +317,7 @@ function process_netcdf(barray) {
  }
 
  CFR = new CFRender(barray, null, gNETCDF_PROJECTION_CACHE)
+
  
  render_image()
 }

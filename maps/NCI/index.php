@@ -20,6 +20,19 @@
        <li><a href="ANU_BOM_Earth3_windspeed.php">Wind Speed</a></li>
        <li><a href="ANU_BOM_Earth3_surface_air_pressure.php">Surface Air Pressure</a></li>
        <li><a href="ANU_BOM_Earth3_air_pressure_sea_level.php">Air Pressure Sea Level</a></li>
+       <li><a href="ANU_BOM_Earth3_solar_irradiance.php">Solar Irradiance</a></li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li>ANU Climate (v1.0)
+    <ul>
+     <li>DEM 1.0km based visualizations
+      <ul>
+       <li><a href="ANU_Climate_elevation.php">Elevation</a></li>
+       <li><a href="ANU_Climate_hillshade.php">Hillshade</a></li>
+       <li><a href="ANU_Climate_hillshade_webgl.php">Hillshade (webgl)</a></li>
+       <li><a href="ANU_Climate_viewshed.php">Viewshed</a></li>
       </ul>
      </li>
     </ul>
@@ -39,6 +52,7 @@
      <li>Airborne Geophysics
       <ul>
        <li><a href="ANU_GA_geophysics_elevation.php">Elevation Survey</a></li>
+       <li><a href="ANU_GA_geophysics_hillshade.php">Elevation Survey (hillshade)</a></li>
       </ul>
      </li>
     </ul>
